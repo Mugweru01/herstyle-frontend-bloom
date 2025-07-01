@@ -8,7 +8,6 @@ interface Category {
   name: string;
   slug: string;
   description?: string;
-  image_url?: string;
 }
 
 const FeaturedCategories = () => {
@@ -23,7 +22,7 @@ const FeaturedCategories = () => {
     try {
       const { data, error } = await supabase
         .from('categories')
-        .select('id, name, slug, description, image_url')
+        .select('id, name, slug, description')
         .eq('is_active', true)
         .limit(4);
 
@@ -102,39 +101,38 @@ const FeaturedCategories = () => {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        {displayCategories.map((category, index) => (
-          <Link
-            key={category.id}
-            to={`/collections/${category.slug}`}
-            className="group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-500 animate-fade-in"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <div className="aspect-[3/4] relative">
-              <img
-                src={category.image_url || fallbackCategories[index]?.image_url}
-                alt={category.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = fallbackCategories[index]?.image_url || '';
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
-              
-              <div className="absolute bottom-6 left-6 right-6 text-white">
-                <h3 className="text-2xl font-playfair font-semibold mb-2">
-                  {category.name}
-                </h3>
-                <p className="text-sm opacity-90 group-hover:opacity-100 transition-opacity">
-                  {category.description || fallbackCategories.find(f => f.name === category.name)?.description}
-                </p>
-              </div>
+        {displayCategories.map((category, index) => {
+          const fallbackCategory = fallbackCategories[index] || fallbackCategories[0];
+          return (
+            <Link
+              key={category.id}
+              to={`/collections/${category.slug}`}
+              className="group relative overflow-hidden rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-500 animate-fade-in"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <div className="aspect-[3/4] relative">
+                <img
+                  src={fallbackCategory.image_url}
+                  alt={category.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                
+                <div className="absolute bottom-6 left-6 right-6 text-white">
+                  <h3 className="text-2xl font-playfair font-semibold mb-2">
+                    {category.name}
+                  </h3>
+                  <p className="text-sm opacity-90 group-hover:opacity-100 transition-opacity">
+                    {category.description || fallbackCategory.description}
+                  </p>
+                </div>
 
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-blush-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-          </Link>
-        ))}
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-blush-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );
