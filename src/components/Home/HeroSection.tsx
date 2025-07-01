@@ -9,10 +9,10 @@ const HeroSection = () => {
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=1920&h=1080&fit=crop&crop=center')`
+          backgroundImage: `url('/lovable-uploads/2123e70e-daa7-43dc-bb4d-a6490783e121.png')`
         }}
       >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-black/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-black/20"></div>
       </div>
 
       {/* Content */}
@@ -25,7 +25,7 @@ const HeroSection = () => {
         </h1>
         
         <p className="text-lg sm:text-xl lg:text-2xl mb-8 font-light leading-relaxed animate-slide-up opacity-90">
-          Elegant fashion, curated beauty, and timeless accessories for the modern woman who defines her own path.
+          Elegant Fashion
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up">

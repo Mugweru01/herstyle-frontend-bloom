@@ -35,35 +35,35 @@ const FeaturedCategories = () => {
     }
   };
 
-  // Fallback categories with default images if none exist in database
+  // Updated categories with new images and clean taglines
   const fallbackCategories = [
     {
       id: '1',
-      name: 'New Arrivals',
-      slug: 'new-arrivals',
-      description: 'Latest styles for the season',
-      image_url: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=800&fit=crop&crop=center'
+      name: 'Evening Wear',
+      slug: 'evening-wear',
+      description: 'Stunning Elegance',
+      image_url: '/lovable-uploads/e6c96a3a-8435-4193-b309-9f3a3bffe1b9.png'
     },
     {
       id: '2',
-      name: 'Beauty',
-      slug: 'beauty',
-      description: 'Enhance your natural glow',
-      image_url: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=600&h=800&fit=crop&crop=center'
+      name: 'Footwear',
+      slug: 'footwear',
+      description: 'Step Forward',
+      image_url: '/lovable-uploads/759eb4ae-d821-4098-9c45-ec9ae2e2a570.png'
     },
     {
       id: '3',
-      name: 'Accessories',
-      slug: 'accessories',
-      description: 'Perfect finishing touches',
-      image_url: 'https://images.unsplash.com/photo-1500673922987-e212871fec22?w=600&h=800&fit=crop&crop=center'
+      name: 'Beauty',
+      slug: 'beauty',
+      description: 'Natural Glow',
+      image_url: '/lovable-uploads/83fee30b-494a-4ac0-988d-fad829e99594.png'
     },
     {
       id: '4',
-      name: 'Collections',
-      slug: 'collections',
-      description: 'Curated for your lifestyle',
-      image_url: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=600&h=800&fit=crop&crop=center'
+      name: 'Casual Wear',
+      slug: 'casual-wear',
+      description: 'Effortless Style',
+      image_url: '/lovable-uploads/bb73604a-0ec4-4297-98c3-a98647f8a72f.png'
     },
   ];
 
