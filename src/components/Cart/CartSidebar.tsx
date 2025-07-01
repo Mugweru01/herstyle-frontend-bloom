@@ -18,12 +18,23 @@ interface CartSidebarProps {
 export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
   const { items, updateQuantity, removeFromCart, getTotalPrice, loading } = useCart();
 
+  // Format price in KES
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-KE', {
+      style: 'currency',
+      currency: 'KES',
+    }).format(price);
+  };
+
   if (loading) {
     return (
       <Sheet open={isOpen} onOpenChange={onClose}>
         <SheetContent>
           <div className="flex items-center justify-center h-full">
-            Loading cart...
+            <div className="animate-pulse text-center">
+              <ShoppingBag size={48} className="mx-auto mb-4 text-gray-300" />
+              <p>Loading cart...</p>
+            </div>
           </div>
         </SheetContent>
       </Sheet>
@@ -56,7 +67,7 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                   {items.map((item) => (
                     <div key={item.id} className="flex items-center space-x-4 border-b pb-4">
                       <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden">
-                        {item.product.images?.[0] && (
+                        {item.product.images && item.product.images[0] && (
                           <img
                             src={item.product.images[0]}
                             alt={item.product.name}
@@ -66,9 +77,9 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                       </div>
                       
                       <div className="flex-1">
-                        <h4 className="font-medium text-sm">{item.product.name}</h4>
+                        <h4 className="font-medium text-sm line-clamp-2">{item.product.name}</h4>
                         <p className="text-blush-500 font-semibold">
-                          ${item.product.price.toFixed(2)}
+                          {formatPrice(item.product.price)}
                         </p>
                       </div>
                       
@@ -112,7 +123,7 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
               <div className="border-t pt-4 space-y-4">
                 <div className="flex justify-between items-center text-lg font-semibold">
                   <span>Total:</span>
-                  <span>${getTotalPrice().toFixed(2)}</span>
+                  <span>{formatPrice(getTotalPrice())}</span>
                 </div>
                 
                 <Button className="w-full" size="lg">

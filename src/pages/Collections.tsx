@@ -1,81 +1,110 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { Heart, ShoppingBag, Filter, Grid, List } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useCart } from '@/hooks/useCart';
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  sale_price?: number;
+  images: string[];
+  category?: string;
+  slug: string;
+  description?: string;
+  stock?: number;
+}
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
 
 const Collections = () => {
+  const { category: categorySlug } = useParams();
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('featured');
   const [showFilters, setShowFilters] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>(categorySlug || 'all');
+  const { addToCart } = useCart();
 
-  const products = [
-    {
-      id: 1,
-      name: 'Silk Blouse',
-      price: 159,
-      originalPrice: 199,
-      image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=500&fit=crop',
-      category: 'Clothing',
-      colors: ['Black', 'White', 'Blush'],
-      sizes: ['XS', 'S', 'M', 'L', 'XL'],
-      badge: 'Sale',
-      isLiked: false
-    },
-    {
-      id: 2,
-      name: 'Pearl Earrings',
-      price: 89,
-      image: 'https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?w=400&h=500&fit=crop',
-      category: 'Accessories',
-      colors: ['Pearl', 'Gold'],
-      badge: 'New',
-      isLiked: true
-    },
-    {
-      id: 3,
-      name: 'Cashmere Scarf',
-      price: 129,
-      image: 'https://images.unsplash.com/photo-1500673922987-e212871fec22?w=400&h=500&fit=crop',
-      category: 'Accessories',
-      colors: ['Cream', 'Gray', 'Navy'],
-      isLiked: false
-    },
-    {
-      id: 4,
-      name: 'Leather Handbag',
-      price: 299,
-      originalPrice: 399,
-      image: 'https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400&h=500&fit=crop',
-      category: 'Bags',
-      colors: ['Black', 'Brown', 'Cognac'],
-      badge: 'Bestseller',
-      isLiked: false
-    },
-    // Add more products...
-    {
-      id: 5,
-      name: 'Wool Coat',
-      price: 349,
-      image: 'https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=400&h=500&fit=crop',
-      category: 'Clothing',
-      colors: ['Camel', 'Black', 'Navy'],
-      sizes: ['XS', 'S', 'M', 'L', 'XL'],
-      isLiked: false
-    },
-    {
-      id: 6,
-      name: 'Gold Bracelet',
-      price: 149,
-      image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=500&fit=crop',
-      category: 'Jewelry',
-      colors: ['Gold', 'Silver'],
-      badge: 'Limited',
-      isLiked: true
+  useEffect(() => {
+    Promise.all([fetchProducts(), fetchCategories()]);
+  }, [selectedCategory]);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      let query = supabase
+        .from('products')
+        .select('id, name, price, sale_price, images, category, slug, description, stock')
+        .eq('status', true);
+
+      if (selectedCategory !== 'all') {
+        query = query.eq('category', selectedCategory);
+      }
+
+      // Apply sorting
+      switch (sortBy) {
+        case 'price-low':
+          query = query.order('price', { ascending: true });
+          break;
+        case 'price-high':
+          query = query.order('price', { ascending: false });
+          break;
+        case 'newest':
+          query = query.order('created_at', { ascending: false });
+          break;
+        default:
+          query = query.order('created_at', { ascending: false });
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
 
-  const categories = ['All', 'Clothing', 'Accessories', 'Bags', 'Jewelry'];
-  const priceRanges = ['Under $50', '$50 - $100', '$100 - $200', '$200 - $500', 'Over $500'];
+  const fetchCategories = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('id, name, slug')
+        .eq('is_active', true);
+
+      if (error) throw error;
+      setCategories(data || []);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-KE', {
+      style: 'currency',
+      currency: 'KES',
+    }).format(price);
+  };
+
+  const handleAddToCart = async (productId: string, productName: string) => {
+    await addToCart(productId, 1);
+  };
+
+  const allCategories = [{ id: 'all', name: 'All', slug: 'all' }, ...categories];
+  const currentCategory = categories.find(cat => cat.slug === categorySlug);
+  const pageTitle = currentCategory ? currentCategory.name : 'Collections';
 
   return (
     <Layout>
@@ -84,7 +113,7 @@ const Collections = () => {
         <div className="bg-gradient-to-r from-cream-50 to-blush-50 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl lg:text-6xl font-playfair font-bold text-gray-900 mb-4">
-              Collections
+              {pageTitle}
             </h1>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Discover carefully curated pieces that celebrate your individuality and empower your style journey.
@@ -97,12 +126,17 @@ const Collections = () => {
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
             {/* Category Navigation */}
             <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
+              {allCategories.map((category) => (
                 <button
-                  key={category}
-                  className="px-6 py-2 rounded-2xl border border-cream-200 hover:border-blush-300 hover:bg-blush-50 transition-colors text-sm font-medium"
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.slug)}
+                  className={`px-6 py-2 rounded-2xl border transition-colors text-sm font-medium ${
+                    selectedCategory === category.slug
+                      ? 'border-blush-300 bg-blush-50 text-blush-600'
+                      : 'border-cream-200 hover:border-blush-300 hover:bg-blush-50'
+                  }`}
                 >
-                  {category}
+                  {category.name}
                 </button>
               ))}
             </div>
@@ -126,7 +160,6 @@ const Collections = () => {
                 <option value="price-low">Price: Low to High</option>
                 <option value="price-high">Price: High to Low</option>
                 <option value="newest">Newest</option>
-                <option value="popular">Most Popular</option>
               </select>
 
               <div className="flex items-center gap-2 border border-cream-200 rounded-2xl p-1">
@@ -150,184 +183,129 @@ const Collections = () => {
             </div>
           </div>
 
-          {/* Filters Sidebar */}
-          {showFilters && (
-            <div className="bg-cream-50 rounded-2xl p-6 mb-8 animate-fade-in">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div>
-                  <h3 className="font-playfair font-semibold text-lg mb-4">Price Range</h3>
-                  <div className="space-y-2">
-                    {priceRanges.map((range) => (
-                      <label key={range} className="flex items-center">
-                        <input type="checkbox" className="rounded border-gray-300 text-blush-500 focus:ring-blush-500" />
-                        <span className="ml-2 text-sm">{range}</span>
-                      </label>
-                    ))}
-                  </div>
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-[3/4] bg-cream-200 rounded-2xl mb-4"></div>
+                  <div className="h-6 bg-cream-200 rounded mb-2"></div>
+                  <div className="h-4 bg-cream-200 rounded w-3/4"></div>
                 </div>
-                
-                <div>
-                  <h3 className="font-playfair font-semibold text-lg mb-4">Size</h3>
-                  <div className="grid grid-cols-3 gap-2">
-                    {['XS', 'S', 'M', 'L', 'XL', 'XXL'].map((size) => (
-                      <button
-                        key={size}
-                        className="px-3 py-2 text-sm border border-cream-200 rounded-lg hover:border-blush-300 hover:bg-blush-50 transition-colors"
-                      >
-                        {size}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="font-playfair font-semibold text-lg mb-4">Color</h3>
-                  <div className="grid grid-cols-6 gap-2">
-                    {['#000000', '#FFFFFF', '#F7B3BE', '#E0606B', '#5E7961', '#EBC9B7'].map((color) => (
-                      <button
-                        key={color}
-                        className="w-8 h-8 rounded-full border-2 border-gray-200 hover:border-blush-300 transition-colors"
-                        style={{ backgroundColor: color }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-          )}
-
-          {/* Products Grid */}
-          <div className={`grid gap-8 ${
-            viewMode === 'grid' 
-              ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
-              : 'grid-cols-1'
-          }`}>
-            {products.map((product, index) => (
-              <div
-                key={product.id}
-                className={`group herstyle-card overflow-hidden animate-fade-in ${
-                  viewMode === 'list' ? 'flex gap-6' : ''
-                }`}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className={`relative overflow-hidden ${
-                  viewMode === 'list' ? 'w-64 flex-shrink-0' : 'aspect-[3/4]'
-                }`}>
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  
-                  {/* Badge */}
-                  {product.badge && (
-                    <div className={`absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium ${
-                      product.badge === 'New' ? 'bg-sage-500 text-white' :
-                      product.badge === 'Sale' ? 'bg-dustyrose-500 text-white' :
-                      product.badge === 'Limited' ? 'bg-gold-500 text-white' :
-                      'bg-blush-500 text-white'
+          ) : (
+            <>
+              {/* Products Grid */}
+              <div className={`grid gap-8 ${
+                viewMode === 'grid' 
+                  ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4' 
+                  : 'grid-cols-1'
+              }`}>
+                {products.map((product, index) => (
+                  <div
+                    key={product.id}
+                    className={`group herstyle-card overflow-hidden animate-fade-in ${
+                      viewMode === 'list' ? 'flex gap-6' : ''
+                    }`}
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className={`relative overflow-hidden ${
+                      viewMode === 'list' ? 'w-64 flex-shrink-0' : 'aspect-[3/4]'
                     }`}>
-                      {product.badge}
-                    </div>
-                  )}
-
-                  {/* Quick actions */}
-                  <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button className={`p-2 rounded-full backdrop-blur-sm transition-colors ${
-                      product.isLiked ? 'bg-blush-500 text-white' : 'bg-white/80 text-gray-700 hover:bg-blush-500 hover:text-white'
-                    }`}>
-                      <Heart size={16} fill={product.isLiked ? 'currentColor' : 'none'} />
-                    </button>
-                  </div>
-
-                  {/* Quick add to bag */}
-                  <div className="absolute bottom-4 inset-x-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                    <button className="w-full herstyle-button text-sm py-2 backdrop-blur-sm">
-                      <ShoppingBag size={16} className="inline mr-2" />
-                      Quick Add
-                    </button>
-                  </div>
-                </div>
-
-                <div className={`p-6 ${viewMode === 'list' ? 'flex-1' : ''}`}>
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-playfair font-semibold text-lg text-gray-900">
-                      {product.name}
-                    </h3>
-                    <span className="text-xs text-gray-500 bg-cream-100 px-2 py-1 rounded-full">
-                      {product.category}
-                    </span>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-xl font-medium text-gray-900">
-                      ${product.price}
-                    </span>
-                    {product.originalPrice && (
-                      <span className="text-sm text-gray-500 line-through">
-                        ${product.originalPrice}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Colors */}
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-sm text-gray-600">Colors:</span>
-                    <div className="flex gap-1">
-                      {product.colors.slice(0, 3).map((color) => (
-                        <div
-                          key={color}
-                          className="w-4 h-4 rounded-full border border-gray-200"
-                          style={{ 
-                            backgroundColor: color === 'Black' ? '#000' : 
-                                          color === 'White' ? '#fff' :
-                                          color === 'Blush' ? '#F7B3BE' :
-                                          color === 'Pearl' ? '#f8f8f8' :
-                                          color === 'Gold' ? '#fbbf24' :
-                                          color === 'Gray' ? '#6b7280' :
-                                          color === 'Navy' ? '#1e3a8a' :
-                                          color === 'Cream' ? '#fef3c7' :
-                                          color === 'Brown' ? '#92400e' :
-                                          color === 'Cognac' ? '#d97706' :
-                                          color === 'Camel' ? '#f59e0b' :
-                                          color === 'Silver' ? '#e5e7eb' :
-                                          '#f3f4f6'
-                          }}
+                      {product.images && product.images[0] ? (
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                         />
-                      ))}
-                      {product.colors.length > 3 && (
-                        <span className="text-xs text-gray-500">+{product.colors.length - 3}</span>
+                      ) : (
+                        <div className="w-full h-full bg-cream-100 flex items-center justify-center">
+                          <span className="text-cream-400">No image</span>
+                        </div>
+                      )}
+                      
+                      {/* Sale Badge */}
+                      {product.sale_price && product.sale_price < product.price && (
+                        <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium bg-dustyrose-500 text-white">
+                          Sale
+                        </div>
+                      )}
+
+                      {/* Out of stock badge */}
+                      {product.stock === 0 && (
+                        <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium bg-gray-500 text-white">
+                          Out of Stock
+                        </div>
+                      )}
+
+                      {/* Quick actions */}
+                      <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button className="p-2 rounded-full bg-white/80 text-gray-700 hover:bg-blush-500 hover:text-white transition-colors">
+                          <Heart size={16} />
+                        </button>
+                      </div>
+
+                      {/* Quick add to bag */}
+                      {product.stock !== 0 && (
+                        <div className="absolute bottom-4 inset-x-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                          <button 
+                            onClick={() => handleAddToCart(product.id, product.name)}
+                            className="w-full herstyle-button text-sm py-2 backdrop-blur-sm"
+                          >
+                            <ShoppingBag size={16} className="inline mr-2" />
+                            Quick Add
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className={`p-6 ${viewMode === 'list' ? 'flex-1' : ''}`}>
+                      <div className="flex items-start justify-between mb-2">
+                        <h3 className="font-playfair font-semibold text-lg text-gray-900 line-clamp-2">
+                          {product.name}
+                        </h3>
+                        {product.category && (
+                          <span className="text-xs text-gray-500 bg-cream-100 px-2 py-1 rounded-full ml-2 whitespace-nowrap">
+                            {product.category}
+                          </span>
+                        )}
+                      </div>
+                      
+                      <div className="flex items-center gap-2 mb-4">
+                        <span className="text-xl font-medium text-gray-900">
+                          {formatPrice(product.sale_price || product.price)}
+                        </span>
+                        {product.sale_price && product.sale_price < product.price && (
+                          <span className="text-sm text-gray-500 line-through">
+                            {formatPrice(product.price)}
+                          </span>
+                        )}
+                      </div>
+
+                      {viewMode === 'list' && product.description && (
+                        <p className="text-gray-600 text-sm line-clamp-2 mb-4">
+                          {product.description}
+                        </p>
+                      )}
+
+                      {product.stock !== undefined && product.stock <= 5 && product.stock > 0 && (
+                        <p className="text-sm text-dustyrose-500 font-medium">
+                          Only {product.stock} left in stock
+                        </p>
                       )}
                     </div>
                   </div>
-
-                  {/* Sizes (if applicable) */}
-                  {product.sizes && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-600">Sizes:</span>
-                      <div className="flex gap-1">
-                        {product.sizes.slice(0, 4).map((size) => (
-                          <span key={size} className="text-xs text-gray-500 bg-cream-100 px-2 py-1 rounded">
-                            {size}
-                          </span>
-                        ))}
-                        {product.sizes.length > 4 && (
-                          <span className="text-xs text-gray-500">+{product.sizes.length - 4}</span>
-                        )}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
 
-          {/* Load More */}
-          <div className="text-center mt-12">
-            <button className="herstyle-button-secondary text-lg px-8 py-3">
-              Load More Products
-            </button>
-          </div>
+              {products.length === 0 && (
+                <div className="text-center py-12">
+                  <h3 className="text-xl font-semibold mb-2">No products found</h3>
+                  <p className="text-gray-600">Try adjusting your filters or check back later for new arrivals!</p>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
     </Layout>
