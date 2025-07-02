@@ -12,6 +12,7 @@ import Blog from "./pages/Blog";
 import Contact from "./pages/Contact";
 import NotFound from "./pages/NotFound";
 import CategoryPage from "./pages/CategoryPage";
+import NewIn from "./pages/NewIn";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/collections" element={<Collections />} />
             <Route path="/collections/:slug" element={<CategoryPage />} />
+            <Route path="/new-in" element={<NewIn />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="*" element={<NotFound />} />
