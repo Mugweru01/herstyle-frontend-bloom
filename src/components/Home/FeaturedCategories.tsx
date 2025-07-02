@@ -95,9 +95,6 @@ const FeaturedCategories = () => {
         <h2 className="text-4xl lg:text-5xl font-playfair font-bold text-gray-900 mb-4">
           Explore Our World
         </h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          From timeless classics to contemporary trends, discover pieces that speak to your unique style.
-        </p>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -116,15 +113,12 @@ const FeaturedCategories = () => {
                   alt={category.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
                 
                 <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <h3 className="text-2xl font-playfair font-semibold mb-2">
+                  <h3 className="text-2xl font-playfair font-semibold">
                     {category.name}
                   </h3>
-                  <p className="text-sm opacity-90 group-hover:opacity-100 transition-opacity">
-                    {category.description || fallbackCategory.description}
-                  </p>
                 </div>
 
                 {/* Hover overlay */}
