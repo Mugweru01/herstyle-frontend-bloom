@@ -1,43 +1,96 @@
 
-import React from 'react';
-import Layout from '../components/Layout/Layout';
-import { Sparkles, Heart, Star, Palette } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useCart } from '@/hooks/useCart';
+import { useToast } from '@/hooks/use-toast';
+import { Heart, ShoppingBag, Sparkles } from 'lucide-react';
+import Layout from '@/components/Layout/Layout';
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  sale_price?: number;
+  images: string[];
+  description?: string;
+  category?: string;
+  slug: string;
+  stock: number;
+}
 
 const Beauty = () => {
-  const beautyCategories = [
-    {
-      id: 1,
-      name: 'Skincare',
-      description: 'Nourish and pamper your skin with our premium skincare collection',
-      image: 'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-      icon: <Sparkles className="w-6 h-6" />,
-      products: 24
-    },
-    {
-      id: 2,
-      name: 'Makeup',
-      description: 'Express yourself with our curated makeup essentials',
-      image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-      icon: <Palette className="w-6 h-6" />,
-      products: 36
-    },
-    {
-      id: 3,
-      name: 'Fragrance',
-      description: 'Discover your signature scent from our luxury fragrance collection',
-      image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-      icon: <Heart className="w-6 h-6" />,
-      products: 18
-    },
-    {
-      id: 4,
-      name: 'Hair Care',
-      description: 'Achieve beautiful, healthy hair with our professional hair care range',
-      image: 'https://images.unsplash.com/photo-1559599101-f09722fb4948?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-      icon: <Star className="w-6 h-6" />,
-      products: 21
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
+  const { toast } = useToast();
+
+  useEffect(() => {
+    fetchBeautyProducts();
+  }, []);
+
+  const fetchBeautyProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('id, name, price, sale_price, images, description, category, slug, stock')
+        .eq('status', true)
+        .ilike('category', '%beauty%')
+        .limit(12);
+
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching beauty products:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load beauty products',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-KE', {
+      style: 'currency',
+      currency: 'KES',
+    }).format(price);
+  };
+
+  const handleAddToCart = async (productId: string, productName: string) => {
+    await addToCart(productId, 1);
+    toast({
+      title: 'Added to cart',
+      description: `${productName} has been added to your cart`,
+    });
+  };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="min-h-screen bg-gradient-to-b from-blush-50 to-white py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <div className="animate-pulse">
+                <div className="h-12 bg-blush-200 rounded w-64 mx-auto mb-4"></div>
+                <div className="h-4 bg-blush-200 rounded w-96 mx-auto"></div>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-[3/4] bg-blush-200 rounded-lg mb-4"></div>
+                  <div className="h-6 bg-blush-200 rounded mb-2"></div>
+                  <div className="h-4 bg-blush-200 rounded w-3/4"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -45,6 +98,9 @@ const Beauty = () => {
       <section className="relative bg-gradient-to-br from-blush-50 to-dustyrose-50 pt-20 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <Sparkles className="w-12 h-12 text-blush-500" />
+            </div>
             <h1 className="text-4xl lg:text-6xl font-playfair font-bold text-gray-900 mb-6">
               Beauty Collection
             </h1>
@@ -56,59 +112,89 @@ const Beauty = () => {
         </div>
       </section>
 
-      {/* Categories Grid */}
+      {/* Products Grid */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {beautyCategories.map((category) => (
-              <div key={category.id} className="herstyle-card group cursor-pointer overflow-hidden">
-                <div className="aspect-w-16 aspect-h-9 mb-6">
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-48 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="p-2 bg-blush-100 rounded-lg text-blush-600 mr-4">
-                      {category.icon}
+          {products.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-lg text-gray-600">No beauty products available at the moment.</p>
+              <p className="text-sm text-gray-500 mt-2">Check back soon for new arrivals!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {products.map((product, index) => (
+                <div
+                  key={product.id}
+                  className="group herstyle-card overflow-hidden animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden">
+                    {product.images && product.images[0] ? (
+                      <img
+                        src={product.images[0]}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-blush-100 flex items-center justify-center">
+                        <Sparkles className="w-12 h-12 text-blush-400" />
+                      </div>
+                    )}
+                    
+                    {/* Sale badge */}
+                    {product.sale_price && product.sale_price < product.price && (
+                      <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium bg-dustyrose-500 text-white">
+                        Sale
+                      </div>
+                    )}
+
+                    {/* Quick actions */}
+                    <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <button className="p-2 rounded-full bg-white/80 text-gray-700 hover:bg-blush-500 hover:text-white transition-colors">
+                        <Heart size={16} />
+                      </button>
                     </div>
-                    <div>
-                      <h3 className="text-2xl font-playfair font-semibold text-gray-900">
-                        {category.name}
-                      </h3>
-                      <p className="text-gray-500">{category.products} products</p>
+
+                    {/* Quick add to bag */}
+                    <div className="absolute bottom-4 inset-x-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                      <button 
+                        onClick={() => handleAddToCart(product.id, product.name)}
+                        className="w-full herstyle-button text-sm py-2 backdrop-blur-sm"
+                        disabled={product.stock === 0}
+                      >
+                        <ShoppingBag size={16} className="inline mr-2" />
+                        {product.stock === 0 ? 'Out of Stock' : 'Quick Add'}
+                      </button>
                     </div>
                   </div>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {category.description}
-                  </p>
-                  <button className="herstyle-button-secondary">
-                    Explore {category.name}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Featured Banner */}
-      <section className="py-16 bg-gradient-to-r from-dustyrose-100 to-blush-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl lg:text-4xl font-playfair font-bold text-gray-900 mb-6">
-              Beauty Consultation Available
-            </h2>
-            <p className="text-lg text-gray-600 mb-8">
-              Book a personalized beauty consultation with our experts to discover 
-              the perfect products for your skin type and style.
-            </p>
-            <button className="herstyle-button text-lg px-8 py-4">
-              Book Consultation
-            </button>
-          </div>
+                  <div className="p-6">
+                    <h3 className="font-playfair font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
+                      {product.name}
+                    </h3>
+                    {product.description && (
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                        {product.description}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xl font-medium text-gray-900">
+                        {formatPrice(product.sale_price || product.price)}
+                      </span>
+                      {product.sale_price && product.sale_price < product.price && (
+                        <span className="text-sm text-gray-500 line-through">
+                          {formatPrice(product.price)}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </Layout>

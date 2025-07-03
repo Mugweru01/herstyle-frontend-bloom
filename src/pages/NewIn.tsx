@@ -12,9 +12,11 @@ interface Product {
   price: number;
   sale_price?: number;
   images: string[];
+  description?: string;
   category?: string;
   slug: string;
   created_at: string;
+  stock: number;
 }
 
 const NewIn = () => {
@@ -31,7 +33,7 @@ const NewIn = () => {
     try {
       const { data, error } = await supabase
         .from('products')
-        .select('id, name, price, sale_price, images, category, slug, created_at')
+        .select('id, name, price, sale_price, images, description, category, slug, created_at, stock')
         .eq('status', true)
         .order('created_at', { ascending: false })
         .limit(20);
@@ -113,7 +115,7 @@ const NewIn = () => {
             </p>
           </div>
 
-          {products.length === 0 ? (
+          {products.length === 0 && !loading ? (
             <div className="text-center py-16">
               <p className="text-lg text-gray-600">No new products available at the moment.</p>
               <p className="text-sm text-gray-500 mt-2">Check back soon for fresh arrivals!</p>
@@ -163,9 +165,10 @@ const NewIn = () => {
                       <button 
                         onClick={() => handleAddToCart(product.id, product.name)}
                         className="w-full herstyle-button text-sm py-2 backdrop-blur-sm"
+                        disabled={product.stock === 0}
                       >
                         <ShoppingBag size={16} className="inline mr-2" />
-                        Quick Add
+                        {product.stock === 0 ? 'Out of Stock' : 'Quick Add'}
                       </button>
                     </div>
                   </div>
@@ -174,6 +177,11 @@ const NewIn = () => {
                     <h3 className="font-playfair font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
                       {product.name}
                     </h3>
+                    {product.description && (
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                        {product.description}
+                      </p>
+                    )}
                     <div className="flex items-center gap-2 mb-2">
                       <span className="text-xl font-medium text-gray-900">
                         {formatPrice(product.sale_price || product.price)}
@@ -187,9 +195,14 @@ const NewIn = () => {
                     {product.category && (
                       <p className="text-sm text-gray-500 mb-1">{product.category}</p>
                     )}
-                    <p className="text-xs text-blush-500">
-                      Added {formatDate(product.created_at)}
-                    </p>
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-blush-500">
+                        Added {formatDate(product.created_at)}
+                      </span>
+                      <span className="text-gray-500">
+                        {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+                      </span>
+                    </div>
                   </div>
                 </div>
               ))}

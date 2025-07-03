@@ -1,64 +1,96 @@
 
-import React from 'react';
-import Layout from '../components/Layout/Layout';
-import { Crown, Watch, Gem, Gift } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { useCart } from '@/hooks/useCart';
+import { useToast } from '@/hooks/use-toast';
+import { Heart, ShoppingBag, Crown } from 'lucide-react';
+import Layout from '@/components/Layout/Layout';
+
+interface Product {
+  id: string;
+  name: string;
+  price: number;
+  sale_price?: number;
+  images: string[];
+  description?: string;
+  category?: string;
+  slug: string;
+  stock: number;
+}
 
 const Accessories = () => {
-  const accessoryCategories = [
-    {
-      id: 1,
-      name: 'Jewelry',
-      description: 'Elegant pieces to complement your every look',
-      image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-      icon: <Gem className="w-6 h-6" />,
-      products: 42
-    },
-    {
-      id: 2,
-      name: 'Watches',
-      description: 'Timeless timepieces for the modern woman',
-      image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-      icon: <Watch className="w-6 h-6" />,
-      products: 28
-    },
-    {
-      id: 3,
-      name: 'Hair Accessories',
-      description: 'Beautiful accessories to perfect your hairstyle',
-      image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-      icon: <Crown className="w-6 h-6" />,
-      products: 35
-    },
-    {
-      id: 4,
-      name: 'Gift Sets',
-      description: 'Curated gift collections for someone special',
-      image: 'https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-      icon: <Gift className="w-6 h-6" />,
-      products: 16
-    }
-  ];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { addToCart } = useCart();
+  const { toast } = useToast();
 
-  const featuredAccessories = [
-    {
-      id: 1,
-      name: 'Rose Gold Statement Necklace',
-      price: '$89',
-      image: 'https://images.unsplash.com/photo-1602173574767-37ac01994b2a?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
-    },
-    {
-      id: 2,
-      name: 'Classic Pearl Earrings',
-      price: '$156',
-      image: 'https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
-    },
-    {
-      id: 3,
-      name: 'Minimalist Gold Watch',
-      price: '$234',
-      image: 'https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80'
+  useEffect(() => {
+    fetchAccessoryProducts();
+  }, []);
+
+  const fetchAccessoryProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('id, name, price, sale_price, images, description, category, slug, stock')
+        .eq('status', true)
+        .ilike('category', '%accessories%')
+        .limit(12);
+
+      if (error) throw error;
+      setProducts(data || []);
+    } catch (error) {
+      console.error('Error fetching accessory products:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load accessory products',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('en-KE', {
+      style: 'currency',
+      currency: 'KES',
+    }).format(price);
+  };
+
+  const handleAddToCart = async (productId: string, productName: string) => {
+    await addToCart(productId, 1);
+    toast({
+      title: 'Added to cart',
+      description: `${productName} has been added to your cart`,
+    });
+  };
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="min-h-screen bg-gradient-to-b from-cream-50 to-white py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <div className="animate-pulse">
+                <div className="h-12 bg-dustyrose-200 rounded w-64 mx-auto mb-4"></div>
+                <div className="h-4 bg-dustyrose-200 rounded w-96 mx-auto"></div>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-[3/4] bg-dustyrose-200 rounded-lg mb-4"></div>
+                  <div className="h-6 bg-dustyrose-200 rounded mb-2"></div>
+                  <div className="h-4 bg-dustyrose-200 rounded w-3/4"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -66,6 +98,9 @@ const Accessories = () => {
       <section className="relative bg-gradient-to-br from-cream-50 to-dustyrose-50 pt-20 pb-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
+            <div className="flex justify-center mb-6">
+              <Crown className="w-12 h-12 text-dustyrose-500" />
+            </div>
             <h1 className="text-4xl lg:text-6xl font-playfair font-bold text-gray-900 mb-6">
               Accessories Collection
             </h1>
@@ -77,95 +112,89 @@ const Accessories = () => {
         </div>
       </section>
 
-      {/* Categories Grid */}
+      {/* Products Grid */}
       <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {accessoryCategories.map((category) => (
-              <div key={category.id} className="herstyle-card group cursor-pointer overflow-hidden">
-                <div className="aspect-w-16 aspect-h-9 mb-6">
-                  <img
-                    src={category.image}
-                    alt={category.name}
-                    className="w-full h-48 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    <div className="p-2 bg-dustyrose-100 rounded-lg text-dustyrose-600 mr-4">
-                      {category.icon}
+          {products.length === 0 ? (
+            <div className="text-center py-16">
+              <p className="text-lg text-gray-600">No accessories available at the moment.</p>
+              <p className="text-sm text-gray-500 mt-2">Check back soon for new arrivals!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {products.map((product, index) => (
+                <div
+                  key={product.id}
+                  className="group herstyle-card overflow-hidden animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden">
+                    {product.images && product.images[0] ? (
+                      <img
+                        src={product.images[0]}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-dustyrose-100 flex items-center justify-center">
+                        <Crown className="w-12 h-12 text-dustyrose-400" />
+                      </div>
+                    )}
+                    
+                    {/* Sale badge */}
+                    {product.sale_price && product.sale_price < product.price && (
+                      <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium bg-dustyrose-500 text-white">
+                        Sale
+                      </div>
+                    )}
+
+                    {/* Quick actions */}
+                    <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <button className="p-2 rounded-full bg-white/80 text-gray-700 hover:bg-dustyrose-500 hover:text-white transition-colors">
+                        <Heart size={16} />
+                      </button>
                     </div>
-                    <div>
-                      <h3 className="text-2xl font-playfair font-semibold text-gray-900">
-                        {category.name}
-                      </h3>
-                      <p className="text-gray-500">{category.products} products</p>
+
+                    {/* Quick add to bag */}
+                    <div className="absolute bottom-4 inset-x-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
+                      <button 
+                        onClick={() => handleAddToCart(product.id, product.name)}
+                        className="w-full herstyle-button text-sm py-2 backdrop-blur-sm"
+                        disabled={product.stock === 0}
+                      >
+                        <ShoppingBag size={16} className="inline mr-2" />
+                        {product.stock === 0 ? 'Out of Stock' : 'Quick Add'}
+                      </button>
                     </div>
                   </div>
-                  <p className="text-gray-600 mb-6 leading-relaxed">
-                    {category.description}
-                  </p>
-                  <button className="herstyle-button-secondary">
-                    Shop {category.name}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* Featured Products */}
-      <section className="py-16 bg-cream-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-playfair font-bold text-gray-900 mb-4">
-              Featured Accessories
-            </h2>
-            <p className="text-lg text-gray-600">
-              Our most loved pieces, handpicked for you
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {featuredAccessories.map((item) => (
-              <div key={item.id} className="herstyle-card group cursor-pointer">
-                <div className="aspect-w-1 aspect-h-1 mb-4">
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-64 object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
-                  />
+                  <div className="p-6">
+                    <h3 className="font-playfair font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
+                      {product.name}
+                    </h3>
+                    {product.description && (
+                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">
+                        {product.description}
+                      </p>
+                    )}
+                    <div className="flex items-center gap-2 mb-2">
+                      <span className="text-xl font-medium text-gray-900">
+                        {formatPrice(product.sale_price || product.price)}
+                      </span>
+                      {product.sale_price && product.sale_price < product.price && (
+                        <span className="text-sm text-gray-500 line-through">
+                          {formatPrice(product.price)}
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500">
+                      {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
+                    </p>
+                  </div>
                 </div>
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    {item.name}
-                  </h3>
-                  <p className="text-2xl font-bold text-blush-600">
-                    {item.price}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-16 bg-gradient-to-r from-blush-500 to-dustyrose-500">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl lg:text-4xl font-playfair font-bold text-white mb-6">
-              Join Our VIP Access
-            </h2>
-            <p className="text-lg text-white/90 mb-8">
-              Get early access to new collections, exclusive discounts, and styling tips 
-              delivered straight to your inbox.
-            </p>
-            <button className="bg-white text-blush-600 font-semibold px-8 py-4 rounded-2xl hover:bg-cream-50 transition-colors">
-              Join Now
-            </button>
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </Layout>

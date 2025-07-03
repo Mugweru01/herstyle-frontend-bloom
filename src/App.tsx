@@ -15,6 +15,7 @@ import CategoryPage from "./pages/CategoryPage";
 import NewIn from "./pages/NewIn";
 import Beauty from "./pages/Beauty";
 import Accessories from "./pages/Accessories";
+import Wishlist from "./pages/Wishlist";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/new-in" element={<NewIn />} />
             <Route path="/beauty" element={<Beauty />} />
             <Route path="/accessories" element={<Accessories />} />
+            <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="*" element={<NotFound />} />
