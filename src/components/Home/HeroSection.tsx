@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 const HeroSection = () => {
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image - High quality green fashion image */}
+      {/* Background Image - Using uploaded image */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
-          backgroundImage: `url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')`
+          backgroundImage: `url('/lovable-uploads/3746c77f-5de6-4d8c-9c22-389cbaf895c4.png')`
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-black/20"></div>
