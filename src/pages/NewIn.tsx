@@ -1,10 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { useCart } from '@/hooks/useCart';
 import { useToast } from '@/hooks/use-toast';
-import { Heart, ShoppingBag } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import Layout from '@/components/Layout/Layout';
+import ProductCard from '@/components/Product/ProductCard';
+import ProductDescription from '@/components/Product/ProductDescription';
 
 interface Product {
   id: string;
@@ -17,12 +18,14 @@ interface Product {
   slug: string;
   created_at: string;
   stock: number;
+  rating?: number;
+  reviews_count?: number;
 }
 
 const NewIn = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const { addToCart } = useCart();
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -39,7 +42,15 @@ const NewIn = () => {
         .limit(20);
 
       if (error) throw error;
-      setProducts(data || []);
+      
+      // Add mock ratings for demo
+      const productsWithRatings = (data || []).map(product => ({
+        ...product,
+        rating: 4.2 + Math.random() * 0.8,
+        reviews_count: Math.floor(Math.random() * 75) + 8
+      }));
+      
+      setProducts(productsWithRatings);
     } catch (error) {
       console.error('Error fetching new products:', error);
       toast({
@@ -52,19 +63,8 @@ const NewIn = () => {
     }
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-KE', {
-      style: 'currency',
-      currency: 'KES',
-    }).format(price);
-  };
-
-  const handleAddToCart = async (productId: string, productName: string) => {
-    await addToCart(productId, 1);
-    toast({
-      title: 'Added to cart',
-      description: `${productName} has been added to your cart`,
-    });
+  const handleQuickView = (product: Product) => {
+    setSelectedProduct(product);
   };
 
   const formatDate = (dateString: string) => {
@@ -89,7 +89,7 @@ const NewIn = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {[...Array(8)].map((_, i) => (
                 <div key={i} className="animate-pulse">
-                  <div className="aspect-[3/4] bg-cream-200 rounded-lg mb-4"></div>
+                  <div className="aspect-[3/4] bg-cream-200 rounded-3xl mb-4"></div>
                   <div className="h-6 bg-cream-200 rounded mb-2"></div>
                   <div className="h-4 bg-cream-200 rounded w-3/4"></div>
                 </div>
@@ -101,11 +101,27 @@ const NewIn = () => {
     );
   }
 
+  if (selectedProduct) {
+    return (
+      <Layout>
+        <ProductDescription 
+          product={selectedProduct} 
+          onClose={() => setSelectedProduct(null)}
+        />
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-b from-cream-50 to-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
+            <div className="flex justify-center mb-6">
+              <div className="p-4 bg-white rounded-full shadow-lg">
+                <Sparkles className="w-12 h-12 text-blush-500" />
+              </div>
+            </div>
             <h1 className="text-4xl lg:text-5xl font-playfair font-bold text-gray-900 mb-4">
               New In
             </h1>
@@ -117,92 +133,34 @@ const NewIn = () => {
 
           {products.length === 0 && !loading ? (
             <div className="text-center py-16">
-              <p className="text-lg text-gray-600">No new products available at the moment.</p>
-              <p className="text-sm text-gray-500 mt-2">Check back soon for fresh arrivals!</p>
+              <div className="mb-8">
+                <Sparkles className="w-16 h-16 text-blush-300 mx-auto mb-4" />
+                <h3 className="text-2xl font-playfair font-semibold text-gray-900 mb-2">
+                  Coming Soon
+                </h3>
+                <p className="text-lg text-gray-600">No new products available at the moment.</p>
+                <p className="text-sm text-gray-500 mt-2">Check back soon for fresh arrivals!</p>
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {products.map((product, index) => (
-                <div
-                  key={product.id}
-                  className="group herstyle-card overflow-hidden animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden">
-                    {product.images && product.images[0] ? (
-                      <img
-                        src={product.images[0]}
-                        alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-cream-100 flex items-center justify-center">
-                        <span className="text-cream-400">No image</span>
-                      </div>
-                    )}
-                    
-                    {/* New badge */}
-                    <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium bg-blush-500 text-white">
-                      New
-                    </div>
-
-                    {/* Sale badge */}
-                    {product.sale_price && product.sale_price < product.price && (
-                      <div className="absolute top-4 left-16 px-3 py-1 rounded-full text-xs font-medium bg-dustyrose-500 text-white">
-                        Sale
-                      </div>
-                    )}
-
-                    {/* Quick actions */}
-                    <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <button className="p-2 rounded-full bg-white/80 text-gray-700 hover:bg-blush-500 hover:text-white transition-colors">
-                        <Heart size={16} />
-                      </button>
-                    </div>
-
-                    {/* Quick add to bag */}
-                    <div className="absolute bottom-4 inset-x-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                      <button 
-                        onClick={() => handleAddToCart(product.id, product.name)}
-                        className="w-full herstyle-button text-sm py-2 backdrop-blur-sm"
-                        disabled={product.stock === 0}
-                      >
-                        <ShoppingBag size={16} className="inline mr-2" />
-                        {product.stock === 0 ? 'Out of Stock' : 'Quick Add'}
-                      </button>
-                    </div>
+                <div key={product.id} className="relative">
+                  <ProductCard
+                    product={product}
+                    onQuickView={handleQuickView}
+                    className="animate-fade-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  />
+                  {/* New arrival badge */}
+                  <div className="absolute -top-2 -right-2 px-3 py-1 bg-gradient-to-r from-blush-500 to-dustyrose-500 text-white text-xs font-semibold rounded-full shadow-lg z-10">
+                    New
                   </div>
-
-                  <div className="p-6">
-                    <h3 className="font-playfair font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
-                      {product.name}
-                    </h3>
-                    {product.description && (
-                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-                        {product.description}
-                      </p>
-                    )}
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xl font-medium text-gray-900">
-                        {formatPrice(product.sale_price || product.price)}
-                      </span>
-                      {product.sale_price && product.sale_price < product.price && (
-                        <span className="text-sm text-gray-500 line-through">
-                          {formatPrice(product.price)}
-                        </span>
-                      )}
-                    </div>
-                    {product.category && (
-                      <p className="text-sm text-gray-500 mb-1">{product.category}</p>
-                    )}
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="text-blush-500">
-                        Added {formatDate(product.created_at)}
-                      </span>
-                      <span className="text-gray-500">
-                        {product.stock > 0 ? `${product.stock} in stock` : 'Out of stock'}
-                      </span>
-                    </div>
+                  {/* Date added */}
+                  <div className="absolute bottom-4 left-4 right-4 text-center">
+                    <span className="text-xs text-blush-600 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full">
+                      Added {formatDate(product.created_at)}
+                    </span>
                   </div>
                 </div>
               ))}
