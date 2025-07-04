@@ -53,7 +53,16 @@ const Navbar = () => {
             </button>
 
             {/* Logo */}
-            <Link to="/" className="flex-shrink-0">
+            <Link to="/" className="flex-shrink-0 flex items-center space-x-3">
+              <img 
+                src="https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/logo/herstylelogo.png" 
+                alt="Herstyle Logo" 
+                className="h-8 lg:h-10 w-auto"
+                onError={(e) => {
+                  // Fallback if logo fails to load
+                  e.currentTarget.style.display = 'none';
+                }}
+              />
               <h1 className="text-2xl lg:text-3xl font-playfair font-bold text-gradient">
                 Herstyle
               </h1>
@@ -82,12 +91,13 @@ const Navbar = () => {
               >
                 <Search size={20} />
               </button>
-              <button
+              <Link
+                to="/wishlist"
                 className="p-2 rounded-2xl hover:bg-cream-100 transition-colors"
                 aria-label="Wishlist"
               >
                 <Heart size={20} />
-              </button>
+              </Link>
               <button
                 className="p-2 rounded-2xl hover:bg-cream-100 transition-colors relative"
                 aria-label="Shopping bag"
