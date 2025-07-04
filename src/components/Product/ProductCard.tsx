@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Heart, ShoppingBag, Eye, Star } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
@@ -22,12 +21,14 @@ interface ProductCardProps {
   product: Product;
   onQuickView?: (product: Product) => void;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ 
   product, 
   onQuickView,
-  className = "" 
+  className = "",
+  style
 }) => {
   const [isLoved, setIsLoved] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -81,7 +82,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const isLowStock = product.stock && product.stock <= 5 && product.stock > 0;
 
   return (
-    <div className={`group relative bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 ${className}`}>
+    <div className={`group relative bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 transform hover:-translate-y-2 ${className}`} style={style}>
       {/* Image Container */}
       <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream-50 to-blush-50">
         {product.images && product.images[0] && !imageError ? (
