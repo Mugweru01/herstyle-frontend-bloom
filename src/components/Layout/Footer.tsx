@@ -167,32 +167,12 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom Section */}
+        {/* Bottom Section - Simplified without duplicates */}
         <div className="mt-12 pt-8 border-t border-cream-200">
-          <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
+          <div className="text-center">
             <p className="text-gray-500 text-sm">
               © 2024 Herstyle. All rights reserved.
             </p>
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              <Link 
-                to="/terms-of-service" 
-                className="text-gray-500 hover:text-blush-500 transition-colors text-sm hover:underline"
-              >
-                Terms of Service
-              </Link>
-              <Link 
-                to="/privacy-policy" 
-                className="text-gray-500 hover:text-blush-500 transition-colors text-sm hover:underline"
-              >
-                Privacy Policy
-              </Link>
-              <Link 
-                to="/cookie-policy" 
-                className="text-gray-500 hover:text-blush-500 transition-colors text-sm hover:underline"
-              >
-                Cookie Policy
-              </Link>
-            </div>
           </div>
         </div>
       </div>
