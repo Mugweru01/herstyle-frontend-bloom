@@ -1,9 +1,52 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Instagram, Facebook, Linkedin, MapPin, Phone } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+
+interface FooterPage {
+  slug: string;
+  title: string;
+}
 
 const Footer = () => {
+  const [footerPages, setFooterPages] = useState<FooterPage[]>([]);
+
+  useEffect(() => {
+    fetchFooterPages();
+  }, []);
+
+  const fetchFooterPages = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('static_pages')
+        .select('slug, title')
+        .order('title');
+
+      if (error) throw error;
+      setFooterPages(data || []);
+    } catch (error) {
+      console.error('Error fetching footer pages:', error);
+      // Fallback to default pages if fetch fails
+      setFooterPages([
+        { slug: 'contact-us', title: 'Contact Us' },
+        { slug: 'shipping-info', title: 'Shipping Info' },
+        { slug: 'returns-policy', title: 'Returns' },
+        { slug: 'size-guide', title: 'Size Guide' },
+        { slug: 'faq', title: 'FAQ' },
+      ]);
+    }
+  };
+
+  // Separate pages into different categories
+  const supportPages = footerPages.filter(page => 
+    ['contact-us', 'shipping-info', 'returns-policy', 'size-guide', 'faq'].includes(page.slug)
+  );
+
+  const legalPages = footerPages.filter(page => 
+    ['terms-of-service', 'privacy-policy', 'cookie-policy'].includes(page.slug)
+  );
+
   return (
     <footer className="bg-gradient-to-b from-cream-50 to-blush-50 border-t border-cream-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
@@ -47,24 +90,24 @@ const Footer = () => {
             <div className="flex space-x-3">
               <a 
                 href="#" 
-                className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200" 
+                className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200 group" 
                 aria-label="Instagram"
               >
-                <Instagram size={18} className="text-blush-500" />
+                <Instagram size={18} className="text-blush-500 group-hover:scale-110 transition-transform" />
               </a>
               <a 
                 href="#" 
-                className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200" 
+                className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200 group" 
                 aria-label="Facebook"
               >
-                <Facebook size={18} className="text-blush-500" />
+                <Facebook size={18} className="text-blush-500 group-hover:scale-110 transition-transform" />
               </a>
               <a 
                 href="#" 
-                className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200" 
+                className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200 group" 
                 aria-label="LinkedIn"
               >
-                <Linkedin size={18} className="text-blush-500" />
+                <Linkedin size={18} className="text-blush-500 group-hover:scale-110 transition-transform" />
               </a>
             </div>
           </div>
@@ -75,25 +118,30 @@ const Footer = () => {
               Shop
             </h3>
             <ul className="space-y-3">
-              <li><Link to="/" className="text-gray-600 hover:text-blush-500 transition-colors text-sm">Home</Link></li>
-              <li><Link to="/new-in" className="text-gray-600 hover:text-blush-500 transition-colors text-sm">New Arrivals</Link></li>
-              <li><Link to="/collections" className="text-gray-600 hover:text-blush-500 transition-colors text-sm">Collections</Link></li>
-              <li><Link to="/beauty" className="text-gray-600 hover:text-blush-500 transition-colors text-sm">Beauty</Link></li>
-              <li><Link to="/accessories" className="text-gray-600 hover:text-blush-500 transition-colors text-sm">Accessories</Link></li>
+              <li><Link to="/" className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline">Home</Link></li>
+              <li><Link to="/new-in" className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline">New Arrivals</Link></li>
+              <li><Link to="/collections" className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline">Collections</Link></li>
+              <li><Link to="/beauty" className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline">Beauty</Link></li>
+              <li><Link to="/accessories" className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline">Accessories</Link></li>
             </ul>
           </div>
 
-          {/* Support Links */}
+          {/* Support Links - Dynamic from Supabase */}
           <div>
             <h3 className="font-playfair font-semibold text-gray-900 text-lg mb-4">
               Support
             </h3>
             <ul className="space-y-3">
-              <li><Link to="/contact-us" className="text-gray-600 hover:text-blush-500 transition-colors text-sm">Contact Us</Link></li>
-              <li><Link to="/shipping-info" className="text-gray-600 hover:text-blush-500 transition-colors text-sm">Shipping Info</Link></li>
-              <li><Link to="/returns-policy" className="text-gray-600 hover:text-blush-500 transition-colors text-sm">Returns</Link></li>
-              <li><Link to="/size-guide" className="text-gray-600 hover:text-blush-500 transition-colors text-sm">Size Guide</Link></li>
-              <li><Link to="/faq" className="text-gray-600 hover:text-blush-500 transition-colors text-sm">FAQ</Link></li>
+              {supportPages.map((page) => (
+                <li key={page.slug}>
+                  <Link 
+                    to={`/${page.slug}`} 
+                    className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline"
+                  >
+                    {page.title}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -117,7 +165,7 @@ const Footer = () => {
               </div>
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blush-500 to-blush-600 text-white py-3 px-4 rounded-2xl hover:from-blush-600 hover:to-blush-700 transition-all duration-200 text-sm font-medium shadow-sm"
+                className="w-full bg-gradient-to-r from-blush-500 to-blush-600 text-white py-3 px-4 rounded-2xl hover:from-blush-600 hover:to-blush-700 transition-all duration-200 text-sm font-medium shadow-sm hover:shadow-md"
               >
                 Subscribe
               </button>
@@ -132,15 +180,15 @@ const Footer = () => {
               © 2024 Herstyle. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              <Link to="/privacy-policy" className="text-gray-500 hover:text-blush-500 transition-colors text-sm">
-                Privacy Policy
-              </Link>
-              <Link to="/terms-of-service" className="text-gray-500 hover:text-blush-500 transition-colors text-sm">
-                Terms of Service
-              </Link>
-              <Link to="/cookie-policy" className="text-gray-500 hover:text-blush-500 transition-colors text-sm">
-                Cookie Policy
-              </Link>
+              {legalPages.map((page) => (
+                <Link 
+                  key={page.slug}
+                  to={`/${page.slug}`} 
+                  className="text-gray-500 hover:text-blush-500 transition-colors text-sm hover:underline"
+                >
+                  {page.title}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
