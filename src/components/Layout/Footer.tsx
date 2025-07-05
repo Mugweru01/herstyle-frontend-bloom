@@ -24,14 +24,20 @@ const Footer = () => {
         .order('title');
 
       if (error) throw error;
-      setFooterPages(data || []);
+      
+      // Remove duplicates based on slug and ensure clean data
+      const uniquePages = data ? data.filter((page, index, self) => 
+        index === self.findIndex(p => p.slug === page.slug)
+      ) : [];
+      
+      setFooterPages(uniquePages);
     } catch (error) {
       console.error('Error fetching footer pages:', error);
       // Fallback to default pages if fetch fails
       setFooterPages([
         { slug: 'contact-us', title: 'Contact Us' },
         { slug: 'shipping-info', title: 'Shipping Info' },
-        { slug: 'returns-policy', title: 'Returns' },
+        { slug: 'returns-policy', title: 'Returns Policy' },
         { slug: 'size-guide', title: 'Size Guide' },
         { slug: 'faq', title: 'FAQ' },
         { slug: 'terms-of-service', title: 'Terms of Service' },
@@ -108,31 +114,68 @@ const Footer = () => {
 
           {/* Shop Links */}
           <div>
-            <h3 className="font-playfair font-semibold text-gray-900 text-lg mb-4">
+            <h3 className="font-playfair font-semibold text-gray-900 text-lg mb-6 border-b border-cream-200 pb-2">
               Shop
             </h3>
-            <ul className="space-y-3">
-              <li><Link to="/" className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline">Home</Link></li>
-              <li><Link to="/new-in" className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline">New Arrivals</Link></li>
-              <li><Link to="/collections" className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline">Collections</Link></li>
-              <li><Link to="/beauty" className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline">Beauty</Link></li>
-              <li><Link to="/accessories" className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline">Accessories</Link></li>
+            <ul className="space-y-4">
+              <li>
+                <Link 
+                  to="/" 
+                  className="text-gray-600 hover:text-blush-500 transition-all duration-200 text-sm hover:underline flex items-center group"
+                >
+                  <span className="group-hover:translate-x-1 transition-transform duration-200">Home</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/new-in" 
+                  className="text-gray-600 hover:text-blush-500 transition-all duration-200 text-sm hover:underline flex items-center group"
+                >
+                  <span className="group-hover:translate-x-1 transition-transform duration-200">New Arrivals</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/collections" 
+                  className="text-gray-600 hover:text-blush-500 transition-all duration-200 text-sm hover:underline flex items-center group"
+                >
+                  <span className="group-hover:translate-x-1 transition-transform duration-200">Collections</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/beauty" 
+                  className="text-gray-600 hover:text-blush-500 transition-all duration-200 text-sm hover:underline flex items-center group"
+                >
+                  <span className="group-hover:translate-x-1 transition-transform duration-200">Beauty</span>
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/accessories" 
+                  className="text-gray-600 hover:text-blush-500 transition-all duration-200 text-sm hover:underline flex items-center group"
+                >
+                  <span className="group-hover:translate-x-1 transition-transform duration-200">Accessories</span>
+                </Link>
+              </li>
             </ul>
           </div>
 
-          {/* All Static Pages - Dynamic from Supabase */}
+          {/* Support & Info - Clean, Styled Static Pages */}
           <div>
-            <h3 className="font-playfair font-semibold text-gray-900 text-lg mb-4">
+            <h3 className="font-playfair font-semibold text-gray-900 text-lg mb-6 border-b border-cream-200 pb-2">
               Support & Info
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-4">
               {footerPages.map((page) => (
                 <li key={page.slug}>
                   <Link 
                     to={`/${page.slug}`} 
-                    className="text-gray-600 hover:text-blush-500 transition-colors text-sm hover:underline"
+                    className="text-gray-600 hover:text-blush-500 transition-all duration-200 text-sm hover:underline flex items-center group"
                   >
-                    {page.title}
+                    <span className="group-hover:translate-x-1 transition-transform duration-200">
+                      {page.title}
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -167,7 +210,7 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Bottom Section - Simplified without duplicates */}
+        {/* Bottom Section - Clean Copyright */}
         <div className="mt-12 pt-8 border-t border-cream-200">
           <div className="text-center">
             <p className="text-gray-500 text-sm">
