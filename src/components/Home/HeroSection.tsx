@@ -8,31 +8,36 @@ const HeroSection = () => {
       image: '/lovable-uploads/3746c77f-5de6-4d8c-9c22-389cbaf895c4.png',
       title: 'Discover Your',
       subtitle: 'Unique Style',
-      description: 'Elegant Fashion for Every Woman'
+      description: 'Elegant Fashion for Every Woman',
+      navTheme: 'dark' // for light backgrounds
     },
     {
       image: '/lovable-uploads/4e9536b6-2f2c-4b5f-b1be-26ef12b979cb.png',
       title: 'Bold & Beautiful',
       subtitle: 'Fashion Forward',
-      description: 'Express Your Personality with Confidence'
+      description: 'Express Your Personality with Confidence',
+      navTheme: 'light' // for dark backgrounds
     },
     {
       image: '/lovable-uploads/9d04533c-8cf0-416c-aa67-646456f785a5.png',
       title: 'Vibrant Styles',
       subtitle: 'That Speak Volumes',
-      description: 'Make Every Moment Your Runway'
+      description: 'Make Every Moment Your Runway',
+      navTheme: 'light'
     },
     {
       image: '/lovable-uploads/e544a89b-821a-478e-a7b3-1138b7aee478.png',
       title: 'Elegance Redefined',
       subtitle: 'Timeless Grace',
-      description: 'Where Sophistication Meets Style'
+      description: 'Where Sophistication Meets Style',
+      navTheme: 'dark'
     },
     {
       image: '/lovable-uploads/167d6302-ac07-4746-83c6-f7a5a7f7f0db.png',
       title: 'Dynamic Duo',
       subtitle: 'Style Together',
-      description: 'Fashion That Brings People Together'
+      description: 'Fashion That Brings People Together',
+      navTheme: 'light'
     }
   ];
 
@@ -51,6 +56,12 @@ const HeroSection = () => {
     return () => clearInterval(interval);
   }, [slides.length]);
 
+  // Update navbar theme based on current slide
+  useEffect(() => {
+    const currentTheme = slides[currentSlide].navTheme;
+    document.documentElement.setAttribute('data-hero-theme', currentTheme);
+  }, [currentSlide, slides]);
+
   const currentSlideData = slides[currentSlide];
 
   return (
@@ -66,7 +77,7 @@ const HeroSection = () => {
             backgroundImage: `url('${slide.image}')`
           }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-black/50 to-black/30"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-black/20"></div>
         </div>
       ))}
 

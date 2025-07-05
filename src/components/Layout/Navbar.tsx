@@ -10,6 +10,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [heroTheme, setHeroTheme] = useState('dark');
   const location = useLocation();
   const { getTotalItems } = useCart();
 
@@ -18,8 +19,27 @@ const Navbar = () => {
       setIsScrolled(window.scrollY > 20);
     };
 
+    // Listen for hero theme changes
+    const handleThemeChange = () => {
+      const theme = document.documentElement.getAttribute('data-hero-theme') || 'dark';
+      setHeroTheme(theme);
+    };
+
+    // Initial theme check
+    handleThemeChange();
+
+    // Set up observers
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    const observer = new MutationObserver(handleThemeChange);
+    observer.observe(document.documentElement, { 
+      attributes: true, 
+      attributeFilter: ['data-hero-theme'] 
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+    };
   }, []);
 
   const navigationItems = [
@@ -35,18 +55,45 @@ const Navbar = () => {
   };
 
   const totalItems = getTotalItems();
+  const isHomePage = location.pathname === '/';
+
+  // Dynamic navbar styles based on scroll and hero theme
+  const getNavbarStyles = () => {
+    if (isScrolled || !isHomePage) {
+      return 'bg-white/95 backdrop-blur-md shadow-sm text-gray-700';
+    }
+    
+    if (heroTheme === 'light') {
+      return 'bg-white/10 backdrop-blur-sm text-white';
+    } else {
+      return 'bg-black/20 backdrop-blur-sm text-white';
+    }
+  };
+
+  const getTextStyles = () => {
+    if (isScrolled || !isHomePage) {
+      return 'text-gray-700';
+    }
+    return 'text-white';
+  };
+
+  const getIconStyles = () => {
+    const baseStyles = "p-2 rounded-2xl transition-all duration-300";
+    if (isScrolled || !isHomePage) {
+      return `${baseStyles} hover:bg-cream-100`;
+    }
+    return `${baseStyles} hover:bg-white/20`;
+  };
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-white/95 backdrop-blur-md shadow-sm' : 'bg-transparent'
-      }`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${getNavbarStyles()}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-2xl hover:bg-cream-100 transition-colors"
+              className={`lg:hidden ${getIconStyles()}`}
               aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -59,11 +106,12 @@ const Navbar = () => {
                 alt="Herstyle Logo" 
                 className="h-8 lg:h-10 w-auto"
                 onError={(e) => {
-                  // Fallback if logo fails to load
                   e.currentTarget.style.display = 'none';
                 }}
               />
-              <h1 className="text-2xl lg:text-3xl font-playfair font-bold text-gradient">
+              <h1 className={`text-2xl lg:text-3xl font-playfair font-bold transition-colors duration-300 ${
+                (isScrolled || !isHomePage) ? 'text-gradient' : 'text-white'
+              }`}>
                 Herstyle
               </h1>
             </Link>
@@ -74,8 +122,10 @@ const Navbar = () => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`font-inter text-sm font-medium transition-colors hover:text-blush-500 ${
-                    isActiveLink(item.href) ? 'text-blush-500' : 'text-gray-700'
+                  className={`font-inter text-sm font-medium transition-all duration-300 ${
+                    isActiveLink(item.href) 
+                      ? ((isScrolled || !isHomePage) ? 'text-blush-500' : 'text-blush-300') 
+                      : `${getTextStyles()} hover:text-blush-400`
                   }`}
                 >
                   {item.name}
@@ -86,20 +136,20 @@ const Navbar = () => {
             {/* Right side icons */}
             <div className="flex items-center space-x-4">
               <button
-                className="p-2 rounded-2xl hover:bg-cream-100 transition-colors"
+                className={getIconStyles()}
                 aria-label="Search"
               >
                 <Search size={20} />
               </button>
               <Link
                 to="/wishlist"
-                className="p-2 rounded-2xl hover:bg-cream-100 transition-colors"
+                className={getIconStyles()}
                 aria-label="Wishlist"
               >
                 <Heart size={20} />
               </Link>
               <button
-                className="p-2 rounded-2xl hover:bg-cream-100 transition-colors relative"
+                className={`${getIconStyles()} relative`}
                 aria-label="Shopping bag"
                 onClick={() => setIsCartOpen(true)}
               >
@@ -119,7 +169,7 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-cream-200">
+          <div className="lg:hidden bg-white/95 backdrop-blur-md border-t border-cream-200">
             <div className="px-4 py-4 space-y-4">
               {navigationItems.map((item) => (
                 <Link
