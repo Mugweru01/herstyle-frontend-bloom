@@ -34,18 +34,12 @@ const Footer = () => {
         { slug: 'returns-policy', title: 'Returns' },
         { slug: 'size-guide', title: 'Size Guide' },
         { slug: 'faq', title: 'FAQ' },
+        { slug: 'terms-of-service', title: 'Terms of Service' },
+        { slug: 'privacy-policy', title: 'Privacy Policy' },
+        { slug: 'cookie-policy', title: 'Cookie Policy' },
       ]);
     }
   };
-
-  // Separate pages into different categories
-  const supportPages = footerPages.filter(page => 
-    ['contact-us', 'shipping-info', 'returns-policy', 'size-guide', 'faq'].includes(page.slug)
-  );
-
-  const legalPages = footerPages.filter(page => 
-    ['terms-of-service', 'privacy-policy', 'cookie-policy'].includes(page.slug)
-  );
 
   return (
     <footer className="bg-gradient-to-b from-cream-50 to-blush-50 border-t border-cream-200">
@@ -126,13 +120,13 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Support Links - Dynamic from Supabase */}
+          {/* All Static Pages - Dynamic from Supabase */}
           <div>
             <h3 className="font-playfair font-semibold text-gray-900 text-lg mb-4">
-              Support
+              Support & Info
             </h3>
             <ul className="space-y-3">
-              {supportPages.map((page) => (
+              {footerPages.map((page) => (
                 <li key={page.slug}>
                   <Link 
                     to={`/${page.slug}`} 
@@ -180,15 +174,24 @@ const Footer = () => {
               © 2024 Herstyle. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              {legalPages.map((page) => (
-                <Link 
-                  key={page.slug}
-                  to={`/${page.slug}`} 
-                  className="text-gray-500 hover:text-blush-500 transition-colors text-sm hover:underline"
-                >
-                  {page.title}
-                </Link>
-              ))}
+              <Link 
+                to="/terms-of-service" 
+                className="text-gray-500 hover:text-blush-500 transition-colors text-sm hover:underline"
+              >
+                Terms of Service
+              </Link>
+              <Link 
+                to="/privacy-policy" 
+                className="text-gray-500 hover:text-blush-500 transition-colors text-sm hover:underline"
+              >
+                Privacy Policy
+              </Link>
+              <Link 
+                to="/cookie-policy" 
+                className="text-gray-500 hover:text-blush-500 transition-colors text-sm hover:underline"
+              >
+                Cookie Policy
+              </Link>
             </div>
           </div>
         </div>
