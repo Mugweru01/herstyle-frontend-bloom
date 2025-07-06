@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { Heart, Award, Users, Sparkles, Star, ArrowRight } from 'lucide-react';
 
