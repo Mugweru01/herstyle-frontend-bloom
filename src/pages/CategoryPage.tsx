@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { supabase } from '@/integrations/supabase/client';
+import ProductCard from '@/components/Product/ProductCard';
 
 interface Product {
   id: string;
@@ -11,6 +12,10 @@ interface Product {
   sale_price?: number;
   images: string[];
   slug: string;
+  description?: string;
+  stock?: number;
+  rating?: number;
+  reviews_count?: number;
 }
 
 interface Category {
@@ -20,46 +25,59 @@ interface Category {
 }
 
 const CategoryPage = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { category: categorySlug } = useParams<{ category: string }>();
   const [category, setCategory] = useState<Category | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (slug) {
+    if (categorySlug) {
       fetchCategoryAndProducts();
     }
-  }, [slug]);
+  }, [categorySlug]);
 
   const fetchCategoryAndProducts = async () => {
     try {
-      // Fetch category details
+      console.log('Fetching category for slug:', categorySlug);
+      
+      // Fetch category details by slug
       const { data: categoryData, error: categoryError } = await supabase
         .from('categories')
         .select('id, name, description')
-        .eq('slug', slug)
+        .eq('slug', categorySlug)
         .single();
 
       if (categoryError) {
         console.error('Error fetching category:', categoryError);
+        setLoading(false);
         return;
       }
 
+      console.log('Found category:', categoryData);
       setCategory(categoryData);
 
-      // Fetch products for this category
+      // Fetch products for this category using category name
       const { data: productsData, error: productsError } = await supabase
         .from('products')
-        .select('id, name, price, sale_price, images, slug')
+        .select('id, name, price, sale_price, images, slug, description, stock')
         .eq('category', categoryData.name)
         .eq('status', true);
 
       if (productsError) {
         console.error('Error fetching products:', productsError);
-        return;
+        setProducts([]);
+      } else {
+        console.log('Found products:', productsData?.length || 0);
+        
+        // Add mock ratings for demo
+        const productsWithRatings = (productsData || []).map(product => ({
+          ...product,
+          rating: 4.5 + Math.random() * 0.5,
+          reviews_count: Math.floor(Math.random() * 50) + 10
+        }));
+        
+        setProducts(productsWithRatings);
       }
-
-      setProducts(productsData || []);
     } catch (error) {
       console.error('Error:', error);
     } finally {
@@ -98,7 +116,7 @@ const CategoryPage = () => {
               Category Not Found
             </h1>
             <p className="text-lg text-gray-600">
-              The category you're looking for doesn't exist.
+              The category "{categorySlug}" doesn't exist or is not active.
             </p>
           </div>
         </div>
@@ -123,46 +141,19 @@ const CategoryPage = () => {
 
           {products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {products.map((product) => (
-                <div
+              {products.map((product, index) => (
+                <ProductCard
                   key={product.id}
-                  className="group cursor-pointer bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300"
-                >
-                  <div className="aspect-square overflow-hidden rounded-t-2xl">
-                    <img
-                      src={product.images[0] || '/placeholder.svg'}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-playfair font-semibold text-lg text-gray-900 mb-2">
-                      {product.name}
-                    </h3>
-                    <div className="flex items-center space-x-2">
-                      {product.sale_price ? (
-                        <>
-                          <span className="text-lg font-semibold text-blush-500">
-                            ${product.sale_price}
-                          </span>
-                          <span className="text-sm text-gray-500 line-through">
-                            ${product.price}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-lg font-semibold text-gray-900">
-                          ${product.price}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
+                  product={product}
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` } as React.CSSProperties}
+                />
               ))}
             </div>
           ) : (
             <div className="text-center py-12">
               <p className="text-lg text-gray-600">
-                No products found in this category yet.
+                No products found in the {category.name} category yet.
               </p>
             </div>
           )}
