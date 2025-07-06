@@ -1325,6 +1325,10 @@ export type Database = {
         Args: { asset_id: string }
         Returns: undefined
       }
+      is_admin_user: {
+        Args: { user_id: string }
+        Returns: boolean
+      }
       is_user_locked: {
         Args: { p_user_id: string }
         Returns: boolean
