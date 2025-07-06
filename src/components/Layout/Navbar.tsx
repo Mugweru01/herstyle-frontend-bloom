@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Search, Heart, ShoppingBag, Menu, X } from 'lucide-react';
@@ -57,32 +56,49 @@ const Navbar = () => {
   const totalItems = getTotalItems();
   const isHomePage = location.pathname === '/';
 
-  // Dynamic navbar styles based on scroll and hero theme
+  // Dynamic navbar background styles
   const getNavbarStyles = () => {
     if (isScrolled || !isHomePage) {
-      return 'bg-white/95 backdrop-blur-md shadow-sm text-gray-700';
+      return 'bg-white/95 backdrop-blur-md shadow-sm';
     }
-    
-    if (heroTheme === 'light') {
-      return 'bg-white/10 backdrop-blur-sm text-white';
-    } else {
-      return 'bg-black/20 backdrop-blur-sm text-white';
-    }
+    // Keep transparent on hero
+    return 'bg-transparent';
   };
 
+  // Dynamic text styles based on hero theme and scroll state
   const getTextStyles = () => {
     if (isScrolled || !isHomePage) {
       return 'text-gray-700';
     }
-    return 'text-white';
+    // Change text color based on hero theme for visibility
+    return heroTheme === 'light' ? 'text-gray-900' : 'text-white';
   };
 
+  // Dynamic logo styles
+  const getLogoStyles = () => {
+    if (isScrolled || !isHomePage) {
+      return 'text-gradient'; // Use gradient when scrolled or not on home
+    }
+    // Change logo color based on hero theme
+    return heroTheme === 'light' ? 'text-gray-900' : 'text-white';
+  };
+
+  // Dynamic icon hover styles
   const getIconStyles = () => {
     const baseStyles = "p-2 rounded-2xl transition-all duration-300";
     if (isScrolled || !isHomePage) {
       return `${baseStyles} hover:bg-cream-100`;
     }
-    return `${baseStyles} hover:bg-white/20`;
+    // Transparent hover effect on hero
+    return `${baseStyles} hover:bg-white/20 hover:backdrop-blur-sm`;
+  };
+
+  // Dynamic active link styles
+  const getActiveLinkColor = () => {
+    if (isScrolled || !isHomePage) {
+      return 'text-blush-500';
+    }
+    return heroTheme === 'light' ? 'text-blush-600' : 'text-blush-300';
   };
 
   return (
@@ -93,7 +109,7 @@ const Navbar = () => {
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`lg:hidden ${getIconStyles()}`}
+              className={`lg:hidden ${getIconStyles()} ${getTextStyles()}`}
               aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -109,9 +125,7 @@ const Navbar = () => {
                   e.currentTarget.style.display = 'none';
                 }}
               />
-              <h1 className={`text-2xl lg:text-3xl font-playfair font-bold transition-colors duration-300 ${
-                (isScrolled || !isHomePage) ? 'text-gradient' : 'text-white'
-              }`}>
+              <h1 className={`text-2xl lg:text-3xl font-playfair font-bold transition-colors duration-300 ${getLogoStyles()}`}>
                 Herstyle
               </h1>
             </Link>
@@ -124,7 +138,7 @@ const Navbar = () => {
                   to={item.href}
                   className={`font-inter text-sm font-medium transition-all duration-300 ${
                     isActiveLink(item.href) 
-                      ? ((isScrolled || !isHomePage) ? 'text-blush-500' : 'text-blush-300') 
+                      ? getActiveLinkColor()
                       : `${getTextStyles()} hover:text-blush-400`
                   }`}
                 >
@@ -136,20 +150,20 @@ const Navbar = () => {
             {/* Right side icons */}
             <div className="flex items-center space-x-4">
               <button
-                className={getIconStyles()}
+                className={`${getIconStyles()} ${getTextStyles()}`}
                 aria-label="Search"
               >
                 <Search size={20} />
               </button>
               <Link
                 to="/wishlist"
-                className={getIconStyles()}
+                className={`${getIconStyles()} ${getTextStyles()}`}
                 aria-label="Wishlist"
               >
                 <Heart size={20} />
               </Link>
               <button
-                className={`${getIconStyles()} relative`}
+                className={`${getIconStyles()} ${getTextStyles()} relative`}
                 aria-label="Shopping bag"
                 onClick={() => setIsCartOpen(true)}
               >
