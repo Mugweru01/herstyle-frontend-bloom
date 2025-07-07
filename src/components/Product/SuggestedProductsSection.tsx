@@ -26,7 +26,7 @@ const SuggestedProductsSection: React.FC<SuggestedProductsSectionProps> = ({
             className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105 hover:shadow-xl"
           >
             <Link to={`/product/${suggestedProduct.slug}`}>
-              <img alt={product.name}
+              <img
                 src={suggestedProduct.image_urls?.[0] || '/public/placeholder.svg'}
                 alt={suggestedProduct.name}
                 className="w-full h-64 object-cover"

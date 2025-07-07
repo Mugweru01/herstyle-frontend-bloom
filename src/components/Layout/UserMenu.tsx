@@ -29,23 +29,13 @@ export const UserMenu = () => {
   if (!user) {
     return (
       <>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => openAuthModal('signin')}
-            className="text-sm"
-          >
-            Sign In
-          </Button>
-          <Button
-            size="sm"
-            onClick={() => openAuthModal('signup')}
-            className="text-sm"
-          >
-            Sign Up
-          </Button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="rounded-full" onClick={() => openAuthModal('signin')}>
+              <User size={20} />
+            </Button>
+          </DropdownMenuTrigger>
+        </DropdownMenu>
         <AuthModal
           isOpen={showAuthModal}
           onClose={() => setShowAuthModal(false)}

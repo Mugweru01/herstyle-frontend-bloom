@@ -45,10 +45,8 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
 
   // Dynamic navbar background styles
   const getNavbarStyles = () => {
-    if (isScrolled) {
-      return 'bg-white shadow-sm'; // White when scrolled
-    } else if (isHomePage && heroImageUrl) {
-      return `bg-cover bg-center shadow-none`; // Use background image
+    if (heroImageUrl) {
+      return `bg-cover bg-center shadow-none backdrop-blur-sm`; // Use background image
     } else {
       return 'bg-white shadow-sm'; // Default to white for other pages
     }
@@ -56,7 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
 
   // Dynamic text styles
   const getTextStyles = () => {
-    if (isHomePage && heroImageUrl && !isScrolled) {
+    if (heroImageUrl) {
       return 'text-white';
     } else {
       return 'text-gray-800'; // Dark text for white background
@@ -65,7 +63,7 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
 
   // Dynamic logo styles
   const getLogoStyles = () => {
-    if (isHomePage && heroImageUrl && !isScrolled) {
+    if (heroImageUrl) {
       return 'text-white';
     } else {
       return 'text-gray-800'; // Dark logo text for white background
@@ -75,7 +73,7 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
   // Dynamic icon hover styles
   const getIconStyles = () => {
     const baseStyles = "p-2 rounded-2xl transition-all duration-300";
-    if (isHomePage && heroImageUrl && !isScrolled) {
+    if (heroImageUrl) {
       return `${baseStyles} hover:bg-white hover:text-[#8B0000]`; // Adjust hover text color to match new background
     } else {
       return `${baseStyles} hover:bg-gray-200 hover:text-[#8B0000]`; // Adjust hover background and text color for white navbar
@@ -84,7 +82,7 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
 
   // Dynamic active link styles
   const getActiveLinkColor = () => {
-    if (isHomePage && heroImageUrl && !isScrolled) {
+    if (heroImageUrl) {
       return 'text-white';
     } else {
       return 'text-gray-800'; // Dark active link text for white background
@@ -94,10 +92,16 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
   return (
     <>
       <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${getNavbarStyles()}`}
-        style={isHomePage && heroImageUrl && !isScrolled ? { backgroundImage: `url(${heroImageUrl})` } : {}}>
+        style={heroImageUrl ? { backgroundImage: `url(${heroImageUrl})` } : {}}>
+        {heroImageUrl && (
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${heroImageUrl})`, filter: 'blur(2px)' }}
+          />
+        )}
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+          <div className="relative z-10 flex items-center justify-between h-16 lg:h-20">
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -169,6 +173,7 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
               <div className="hidden lg:flex">
                 <UserMenu />
               </div>
+
             </div>
           </div>
         </div>
