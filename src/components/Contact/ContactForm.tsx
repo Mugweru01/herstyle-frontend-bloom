@@ -1,133 +1,126 @@
 
-import React, { useState } from 'react';
-import { Send, Mail, User, MessageSquare } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+import React from 'react';
+import { Send } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { useSupabase } from '@/hooks/useSupabase';
 import { useToast } from '@/hooks/use-toast';
 
+const formSchema = z.object({
+  name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
+  email: z.string().email({ message: 'Invalid email address.' }),
+  subject: z.string().min(1, { message: 'Please select a subject.' }),
+  message: z.string().min(10, { message: 'Message must be at least 10 characters.' }),
+});
+
 const ContactForm = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { insertMessage } = useSupabase();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      subject: '',
+      message: '',
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const { error } = await supabase.from('messages').insert([formData]);
+      const { error } = await insertMessage(values.name, values.email, values.subject, values.message);
 
       if (error) {
         throw error;
       }
-      
+
       toast({
         title: 'Message sent successfully!',
         description: 'Thank you for contacting us. We\'ll get back to you soon.',
       });
-      
-      setFormData({ name: '', email: '', message: '' });
+
+      form.reset();
     } catch (error: any) {
       toast({
         title: 'Error',
-        description: `Failed to send message: ${error.message}. Please try again.`, 
+        description: `Failed to send message: ${error.message}. Please try again.`,
         variant: 'destructive',
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
+
   return (
     <div className="bg-white rounded-3xl shadow-lg border border-cream-200 p-8">
-      <div className="mb-6">
-        <h2 className="text-2xl font-playfair font-bold text-gray-900 mb-2">
-          Send us a message
-        </h2>
-        <p className="text-gray-600">
-          Have a question or need help? We're here to assist you.
-        </p>
-      </div>
+      <h2 className="text-3xl font-serif text-gray-800 mb-4">Send us a message</h2>
+      <p className="text-gray-600 mb-8">We're here to assist you with any inquiries.</p>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="relative">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-            Full Name
-          </label>
-          <div className="relative">
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full pl-10 pr-4 py-3 rounded-2xl border border-cream-300 focus:border-blush-500 focus:ring-2 focus:ring-blush-100 outline-none transition-colors"
-              placeholder="Enter your full name"
-            />
-            <User size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          </div>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <div>
+          <label htmlFor="name" className="sr-only">Full Name</label>
+          <input
+            type="text"
+            id="name"
+            placeholder="Full Name"
+            className="w-full p-4 border border-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500 shadow-sm"
+            {...form.register('name')}
+          />
+          {form.formState.errors.name && <p className="text-red-500 text-sm mt-1">{form.formState.errors.name.message}</p>}
         </div>
 
-        <div className="relative">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-            Email Address
-          </label>
-          <div className="relative">
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full pl-10 pr-4 py-3 rounded-2xl border border-cream-300 focus:border-blush-500 focus:ring-2 focus:ring-blush-100 outline-none transition-colors"
-              placeholder="Enter your email address"
-            />
-            <Mail size={18} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-          </div>
+        <div>
+          <label htmlFor="email" className="sr-only">Email Address</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Email Address"
+            className="w-full p-4 border border-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500 shadow-sm"
+            {...form.register('email')}
+          />
+          {form.formState.errors.email && <p className="text-red-500 text-sm mt-1">{form.formState.errors.email.message}</p>}
         </div>
 
-        <div className="relative">
-          <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-            Message
-          </label>
-          <div className="relative">
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-              rows={5}
-              className="w-full pl-10 pr-4 py-3 rounded-2xl border border-cream-300 focus:border-blush-500 focus:ring-2 focus:ring-blush-100 outline-none transition-colors resize-none"
-              placeholder="Tell us how we can help you..."
-            />
-            <MessageSquare size={18} className="absolute left-3 top-4 text-gray-400" />
-          </div>
+        <div>
+          <label htmlFor="subject" className="sr-only">Subject</label>
+          <select
+            id="subject"
+            className="w-full p-4 border border-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500 shadow-sm appearance-none"
+            {...form.register('subject')}
+          >
+            <option value="">Select a Subject</option>
+            <option value="Order">Order</option>
+            <option value="Feedback">Feedback</option>
+            <option value="Styling Help">Styling Help</option>
+            <option value="Other">Other</option>
+          </select>
+          {form.formState.errors.subject && <p className="text-red-500 text-sm mt-1">{form.formState.errors.subject.message}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="message" className="sr-only">Message</label>
+          <textarea
+            id="message"
+            rows={5}
+            placeholder="Your Message"
+            className="w-full p-4 border border-gray-200 rounded-lg focus:ring-pink-500 focus:border-pink-500 shadow-sm resize-none"
+            {...form.register('message')}
+          />
+          {form.formState.errors.message && <p className="text-red-500 text-sm mt-1">{form.formState.errors.message.message}</p>}
         </div>
 
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-blush-500 to-blush-600 text-white py-3 px-6 rounded-2xl hover:from-blush-600 hover:to-blush-700 transition-all duration-200 font-medium flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          disabled={form.formState.isSubmitting}
+          className="w-full bg-pink-600 text-white px-6 py-3 rounded-full hover:bg-pink-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
         >
-          {isSubmitting ? (
+          {form.formState.isSubmitting ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           ) : (
             <>
-              <Send size={18} />
               <span>Send Message</span>
+              <Send size={18} />
             </>
           )}
         </button>

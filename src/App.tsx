@@ -1,4 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
+import ErrorBoundary from "./components/ui/ErrorBoundary";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -13,7 +14,8 @@ import NewIn from "./pages/NewIn";
 import ProductDetail from "./pages/ProductDetail";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
-import Blog from "./pages/Blog";
+import React, { lazy, Suspense } from 'react';
+const Blog = lazy(() => import('./pages/Blog'));
 import Wishlist from "./pages/Wishlist";
 import NotFound from "./pages/NotFound";
 import ContactUs from "./pages/ContactUs";
@@ -27,8 +29,9 @@ function App() {
       <AuthProvider>
         <TooltipProvider>
           <Toaster />
-          <BrowserRouter>
-            <ScrollToTop />
+          <ErrorBoundary>
+            <BrowserRouter>
+              <ScrollToTop />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/collections" element={<Collections />} />
@@ -40,7 +43,11 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/contact-us" element={<ContactUs />} />
-              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog" element={
+                <Suspense fallback={<div>Loading Blog...</div>}>
+                  <Blog />
+                </Suspense>
+              } />
               <Route path="/wishlist" element={<Wishlist />} />
               
               {/* Static Pages */}
@@ -54,7 +61,8 @@ function App() {
               
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </BrowserRouter>
+            </BrowserRouter>
+          </ErrorBoundary>
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>
