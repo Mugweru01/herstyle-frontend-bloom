@@ -1,100 +1,62 @@
 
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
+import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
+import { Card, CardContent } from '@/components/ui/card';
 import Layout from '@/components/Layout/Layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { CalendarDays, Clock, Eye } from 'lucide-react';
+import { fetchBlogPosts } from '../services/blogService';
 
 interface BlogPost {
   id: string;
+  created_at: string;
   title: string;
   slug: string;
+  image_url: string;
   content: string;
-  cover_image: string | null;
-  category: string | null;
-  published_at: string | null;
-  view_count: number;
-  tags: string[];
-  status: string;
 }
 
-const Blog = () => {
+const Blog: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchPosts();
+    const getPosts = async () => {
+      try {
+        setLoading(true);
+        const data = await fetchBlogPosts();
+        setPosts(data || []);
+      } catch (err) {
+        setError('Failed to fetch posts.');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    getPosts();
   }, []);
 
-  const fetchPosts = async () => {
-    try {
-      console.log('Fetching blog posts...');
-      
-      const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('status', 'published')
-        .order('published_at', { ascending: false });
-
-      if (error) {
-        console.error('Error fetching blog posts:', error);
-        setError('Failed to load blog posts');
-        return;
-      }
-
-      console.log('Fetched blog posts:', data?.length || 0);
-      setPosts(data || []);
-    } catch (err) {
-      console.error('Unexpected error fetching blog posts:', err);
-      setError('An unexpected error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'Date not available';
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const calculateReadingTime = (content: string) => {
+  const calculateReadingTime = (text: string): number => {
     const wordsPerMinute = 200;
-    const wordCount = content.split(' ').length;
-    return Math.ceil(wordCount / wordsPerMinute);
+    const noOfWords = text.split(/\s/g).length;
+    const minutes = noOfWords / wordsPerMinute;
+    return Math.ceil(minutes);
   };
 
-  const getExcerpt = (content: string, maxLength: number = 150) => {
-    if (content.length <= maxLength) return content;
-    return content.substring(0, maxLength).trim() + '...';
+  const generateExcerpt = (content: string, wordLimit: number): string => {
+    const words = content.split(' ');
+    if (words.length > wordLimit) {
+      return words.slice(0, wordLimit).join(' ') + '...';
+    }
+    return content;
   };
 
   if (loading) {
     return (
       <Layout>
-        <div className="pt-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div className="text-center">
-              <div className="animate-pulse">
-                <div className="h-12 bg-cream-200 rounded w-64 mx-auto mb-4"></div>
-                <div className="h-4 bg-cream-200 rounded w-96 mx-auto"></div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="aspect-video bg-cream-200 rounded-lg mb-4"></div>
-                    <div className="h-6 bg-cream-200 rounded mb-2"></div>
-                    <div className="h-4 bg-cream-200 rounded w-3/4"></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-4xl font-bold text-center mb-8">Our Blog</h1>
+          <p className="text-center text-gray-600">Loading posts...</p>
         </div>
       </Layout>
     );
@@ -103,21 +65,9 @@ const Blog = () => {
   if (error) {
     return (
       <Layout>
-        <div className="pt-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
-            <h1 className="text-4xl lg:text-6xl font-playfair font-bold text-gray-900 mb-4">
-              Our Blog
-            </h1>
-            <div className="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
-              <p className="text-red-600">{error}</p>
-              <button 
-                onClick={fetchPosts}
-                className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-              >
-                Try Again
-              </button>
-            </div>
-          </div>
+        <div className="container mx-auto px-4 py-8">
+          <h1 className="text-4xl font-bold text-center mb-8">Our Blog</h1>
+          <p className="text-center text-red-500">Error: {error}</p>
         </div>
       </Layout>
     );
@@ -125,80 +75,41 @@ const Blog = () => {
 
   return (
     <Layout>
-      <div className="pt-20">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-cream-50 to-blush-50 py-16">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl lg:text-6xl font-playfair font-bold text-gray-900 mb-4">
-              Our Blog
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Discover the latest trends, beauty tips, and style inspiration from our fashion experts.
-            </p>
-          </div>
+      <div className="container mx-auto px-4 py-8">
+        <div className="text-center mb-12">
+<h1 className="text-5xl font-serif text-pink-600 underline decoration-green-500 decoration-2 underline-offset-4">Herstyle Journal</h1>
+        <p className="text-lg text-black italic">Stories, styling tips, and behind the seams.</p>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          {/* Blog Posts Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {posts.map((post) => (
-              <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                {post.cover_image && (
-                  <div className="aspect-video overflow-hidden">
-                    <img
-                      src={post.cover_image}
-                      alt={post.title}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                )}
-                
-                <CardHeader>
-                  <div className="flex flex-wrap gap-2 mb-2">
-                    {post.category && (
-                      <Badge variant="secondary">{post.category}</Badge>
-                    )}
-                    {post.tags?.slice(0, 2).map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  
-                  <CardTitle className="text-xl font-playfair hover:text-blush-500 transition-colors">
-                    <a href={`/blog/${post.slug}`}>
-                      {post.title}
-                    </a>
-                  </CardTitle>
-                </CardHeader>
-
-                <CardContent>
-                  <p className="text-gray-600 mb-4 line-clamp-3">
-                    {getExcerpt(post.content)}
-                  </p>
-                  
-                  <div className="flex items-center justify-between text-sm text-gray-500">
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-1">
-                        <CalendarDays size={14} />
-                        <span>{formatDate(post.published_at)}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-1">
-                        <Eye size={14} />
-                        <span>{post.view_count || 0}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-1">
-                      <Clock size={14} />
-                      <span>{calculateReadingTime(post.content)} min read</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+          {posts.map((post) => (
+            <Card key={post.id} className="overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out group">
+              <Link to={`/blog/${post.slug}`}>
+                <img src={post.image_url} alt={post.title} className="w-full h-48 object-cover rounded-t-2xl transform group-hover:scale-105 transition-transform duration-300 ease-in-out" />
+              </Link>
+              <CardContent className="p-6">
+                <p className="text-sm text-pink-600 mb-2">
+                  {format(new Date(post.created_at), 'MMMM dd, yyyy')} • {calculateReadingTime(post.content)} min read
+                </p>
+                <Link to={`/blog/${post.slug}`}>
+                  <h2 className="text-3xl font-serif text-gray-800 group-hover:text-pink-600 transition-colors duration-300 ease-in-out mb-2 relative inline-block">
+                    {post.title}
+                    <span className="absolute left-0 bottom-0 h-1 bg-pink-300 w-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out origin-left"></span>
+                  </h2>
+                </Link>
+                <p className="text-gray-700 text-base mb-4">
+                  {generateExcerpt(post.content, 25)}
+                </p>
+                <Link to={`/blog/${post.slug}`} className="text-pink-600 hover:text-pink-800 font-semibold flex items-center group relative">
+                  Read More →
+                  <span className="absolute left-0 bottom-0 h-0.5 bg-pink-600 w-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-in-out origin-left"></span>
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-in-out" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
 
           {posts.length === 0 && (
             <div className="text-center py-12">

@@ -16,6 +16,8 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import React, { lazy, Suspense } from 'react';
 const Blog = lazy(() => import('./pages/Blog'));
+ const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
+
 import Wishlist from "./pages/Wishlist";
 import NotFound from "./pages/NotFound";
 import ContactUs from "./pages/ContactUs";
@@ -46,6 +48,11 @@ function App() {
               <Route path="/blog" element={
                 <Suspense fallback={<div>Loading Blog...</div>}>
                   <Blog />
+                </Suspense>
+              } />
+              <Route path="/blog/:slug" element={
+                <Suspense fallback={<div>Loading Blog Post...</div>}>
+                  <BlogPostPage />
                 </Suspense>
               } />
               <Route path="/wishlist" element={<Wishlist />} />
