@@ -8,6 +8,7 @@ interface Category {
   name: string;
   slug: string;
   description?: string;
+  image_url?: string;
 }
 
 const FeaturedCategories = () => {
@@ -22,7 +23,7 @@ const FeaturedCategories = () => {
     try {
       const { data, error } = await supabase
         .from('categories')
-        .select('id, name, slug, description')
+        .select('id, name, slug, description, image_url')
         .eq('is_active', true)
         .limit(4);
 
@@ -99,7 +100,7 @@ const FeaturedCategories = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {displayCategories.map((category, index) => {
-          const fallbackCategory = fallbackCategories[index] || fallbackCategories[0];
+          const imageUrl = category.image_url || fallbackCategories[index]?.image_url || fallbackCategories[0].image_url;
           return (
             <Link
               key={category.id}
@@ -109,7 +110,7 @@ const FeaturedCategories = () => {
             >
               <div className="aspect-[3/4] relative">
                 <img
-                  src={fallbackCategory.image_url}
+                  src={imageUrl}
                   alt={category.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                 />

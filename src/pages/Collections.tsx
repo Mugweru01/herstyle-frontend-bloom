@@ -25,6 +25,7 @@ interface Category {
   id: string;
   name: string;
   slug: string;
+  image_url?: string;
 }
 
 const Collections = () => {
@@ -92,7 +93,7 @@ const Collections = () => {
     try {
       const { data, error } = await supabase
         .from('categories')
-        .select('id, name, slug')
+        .select('id, name, slug, image_url')
         .eq('is_active', true);
 
       if (error) throw error;
@@ -133,6 +134,15 @@ const Collections = () => {
             <h1 className="font-playfair text-5xl md:text-6xl font-semibold tracking-tight text-gray-900 mb-4 animate-fade-in animate-delay-200">
               {pageTitle}
             </h1>
+            {currentCategory?.image_url && (
+              <div className="mt-8 mb-12">
+                <img 
+                  src={currentCategory.image_url}
+                  alt={currentCategory.name}
+                  className="w-full max-h-96 object-cover rounded-lg shadow-lg mx-auto"
+                />
+              </div>
+            )}
             <p className="font-inter text-lg md:text-xl text-gray-600 font-light tracking-wide italic max-w-2xl mx-auto animate-fade-in animate-delay-300">
               Discover carefully curated pieces that celebrate your individuality and empower your style journey.
             </p>

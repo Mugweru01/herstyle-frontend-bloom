@@ -1,7 +1,6 @@
 
 import React from 'react';
 import Layout from '@/components/Layout/Layout';
-import ContactForm from '@/components/Contact/ContactForm';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 const ContactUs = () => {
@@ -91,7 +90,6 @@ const ContactUs = () => {
                 </div>
               </div>
             </div>
-
             {/* Contact Form */}
             <ContactForm />
           </div>

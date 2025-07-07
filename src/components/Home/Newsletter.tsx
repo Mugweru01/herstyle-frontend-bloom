@@ -1,17 +1,40 @@
 
 import React, { useState } from 'react';
 import { Mail } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 const Newsletter = () => {
   const [email, setEmail] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle newsletter signup logic here
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-    setEmail('');
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.from('newsletter_subscriptions').insert([{ email }]);
+
+      if (error) {
+        throw error;
+      }
+
+      toast({
+        title: 'Subscribed successfully!',
+        description: 'Thank you for subscribing to our newsletter.',
+      });
+
+      setEmail('');
+    } catch (error: any) {
+      toast({
+        title: 'Error',
+        description: `Failed to subscribe: ${error.message}. Please try again.`, 
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -41,9 +64,13 @@ const Newsletter = () => {
             <button
               type="submit"
               className="px-8 py-4 bg-white text-sage-600 rounded-2xl font-medium hover:bg-sage-50 transition-colors transform hover:scale-105 active:scale-95"
-              disabled={isSubmitted}
+              disabled={isSubmitting}
             >
-              {isSubmitted ? 'Subscribed!' : 'Subscribe'}
+              {isSubmitting ? (
+                <div className="w-5 h-5 border-2 border-sage-600 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                'Subscribe'
+              )}
             </button>
           </div>
           
@@ -53,13 +80,7 @@ const Newsletter = () => {
           </p>
         </form>
 
-        {isSubmitted && (
-          <div className="mt-6 p-4 bg-white/20 backdrop-blur-sm rounded-2xl border border-white/30 animate-fade-in">
-            <p className="text-white font-medium">
-              Welcome to the Herstyle community! Check your email for a special welcome offer.
-            </p>
-          </div>
-        )}
+
       </div>
     </section>
   );
