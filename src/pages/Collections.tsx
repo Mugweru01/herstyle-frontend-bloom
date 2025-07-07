@@ -125,14 +125,18 @@ const Collections = () => {
     <Layout>
       <div className="pt-20">
         {/* Header */}
-        <div className="bg-gradient-to-r from-cream-50 to-blush-50 py-16">
+        <div className="bg-gradient-to-b from-pink-50 to-white py-16 animate-fade-in-up">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl lg:text-6xl font-playfair font-bold text-gray-900 mb-4">
+            <span className="inline-block bg-pink-100 text-pink-700 text-xs px-3 py-1 rounded-full uppercase tracking-widest mb-4 animate-fade-in animate-delay-100">
+              Curated Just for You
+            </span>
+            <h1 className="font-playfair text-5xl md:text-6xl font-semibold tracking-tight text-gray-900 mb-4 animate-fade-in animate-delay-200">
               {pageTitle}
             </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="font-inter text-lg md:text-xl text-gray-600 font-light tracking-wide italic max-w-2xl mx-auto animate-fade-in animate-delay-300">
               Discover carefully curated pieces that celebrate your individuality and empower your style journey.
             </p>
+            <div className="w-24 h-1 bg-pink-300 mx-auto mt-6 animate-fade-in animate-delay-400"></div>
           </div>
         </div>
 
@@ -140,15 +144,15 @@ const Collections = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
             {/* Category Navigation */}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3 overflow-x-auto pb-2 no-scrollbar">
               {allCategories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.slug)}
-                  className={`px-6 py-2 rounded-2xl border transition-colors text-sm font-medium ${
+                  className={`rounded-full px-5 py-2 border text-sm font-medium transition-all duration-300 ${
                     selectedCategory === category.slug
-                      ? 'border-blush-300 bg-blush-50 text-blush-600'
-                      : 'border-cream-200 hover:border-blush-300 hover:bg-blush-50'
+                      ? 'bg-pink-100 text-pink-700 border-pink-300 shadow-sm'
+                      : 'bg-white text-gray-700 border-pink-200 hover:bg-pink-50 hover:border-pink-100'
                   }`}
                 >
                   {category.name}
@@ -156,11 +160,12 @@ const Collections = () => {
               ))}
             </div>
 
+
             {/* Controls */}
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-4 py-2 rounded-2xl border border-cream-200 hover:border-blush-300 transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 bg-white hover:bg-gray-50 shadow-sm transition-all duration-300"
               >
                 <Filter size={16} />
                 Filters
@@ -169,7 +174,7 @@ const Collections = () => {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 rounded-2xl border border-cream-200 focus:outline-none focus:ring-2 focus:ring-blush-300"
+                className="px-4 py-2 rounded-full border border-gray-300 bg-white hover:bg-gray-50 shadow-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-300"
               >
                 <option value="featured">Featured</option>
                 <option value="price-low">Price: Low to High</option>
@@ -177,19 +182,19 @@ const Collections = () => {
                 <option value="newest">Newest</option>
               </select>
 
-              <div className="flex items-center gap-2 border border-cream-200 rounded-2xl p-1">
+              <div className="flex items-center gap-2 border border-gray-300 rounded-full p-1 bg-white shadow-sm">
                 <button
                   onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-xl transition-colors ${
-                    viewMode === 'grid' ? 'bg-blush-100 text-blush-600' : 'text-gray-400'
+                  className={`p-2 rounded-full transition-colors ${
+                    viewMode === 'grid' ? 'bg-pink-100 text-pink-700' : 'text-gray-400 hover:bg-gray-100'
                   }`}
                 >
                   <Grid size={16} />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-xl transition-colors ${
-                    viewMode === 'list' ? 'bg-blush-100 text-blush-600' : 'text-gray-400'
+                  className={`p-2 rounded-full transition-colors ${
+                    viewMode === 'list' ? 'bg-pink-100 text-pink-700' : 'text-gray-400 hover:bg-gray-100'
                   }`}
                 >
                   <List size={16} />
@@ -197,19 +202,20 @@ const Collections = () => {
               </div>
             </div>
           </div>
+        </div>
 
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="aspect-[3/4] bg-cream-200 rounded-3xl mb-4"></div>
-                  <div className="h-6 bg-cream-200 rounded mb-2"></div>
-                  <div className="h-4 bg-cream-200 rounded w-3/4"></div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <>
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="aspect-[3/4] bg-cream-200 rounded-3xl mb-4"></div>
+                <div className="h-6 bg-cream-200 rounded mb-2"></div>
+                <div className="h-4 bg-cream-200 rounded w-3/4"></div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <>
               {/* Products Grid */}
               <div className={`grid gap-8 ${
                 viewMode === 'grid' 
@@ -221,7 +227,7 @@ const Collections = () => {
                     key={product.id}
                     product={product}
                     onQuickView={handleQuickView}
-                    className={`animate-fade-in ${viewMode === 'list' ? 'lg:flex lg:gap-6' : ''}`}
+                    className={`animate-fade-in ${viewMode === 'list' ? 'lg:flex lg:gap-6' : ''} shadow-sm hover:shadow-md transition-all duration-300`}
                     style={{ animationDelay: `${index * 0.1}s` }}
                   />
                 ))}
@@ -235,8 +241,70 @@ const Collections = () => {
               )}
             </>
           )}
+          {/* Navigation & Controls */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
+              {/* Category Navigation */}
+              <div className="flex flex-wrap gap-3 overflow-x-auto pb-2 no-scrollbar">
+                {allCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.slug)}
+                    className={`rounded-full px-5 py-2 border text-sm font-medium transition-all duration-300 ${
+                      selectedCategory === category.slug
+                        ? 'bg-pink-100 text-pink-700 border-pink-300 shadow-sm'
+                        : 'bg-white text-gray-700 border-pink-200 hover:bg-pink-50 hover:border-pink-100'
+                    }`}
+                  >
+                    {category.name}
+                  </button>
+                ))}
+              </div>
+
+
+              {/* Controls */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-gray-300 bg-white hover:bg-gray-50 shadow-sm transition-all duration-300"
+                >
+                  <Filter size={16} />
+                  Filters
+                </button>
+                
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="px-4 py-2 rounded-full border border-gray-300 bg-white hover:bg-gray-50 shadow-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-pink-300"
+                >
+                  <option value="featured">Featured</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="newest">Newest</option>
+                </select>
+
+                <div className="flex items-center gap-2 border border-gray-300 rounded-full p-1 bg-white shadow-sm">
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`p-2 rounded-full transition-colors ${
+                      viewMode === 'grid' ? 'bg-pink-100 text-pink-700' : 'text-gray-400 hover:bg-gray-100'
+                    }`}
+                  >
+                    <Grid size={16} />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`p-2 rounded-full transition-colors ${
+                      viewMode === 'list' ? 'bg-pink-100 text-pink-700' : 'text-gray-400 hover:bg-gray-100'
+                    }`}
+                  >
+                    <List size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
     </Layout>
   );
 };
