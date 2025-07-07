@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Layout from '../components/Layout/Layout';
 import { supabase } from '@/integrations/supabase/client';
-import ProductCard from '@/components/Product/ProductCard';
+import ProductRouter from '@/components/Product/ProductRouter';
 
 interface Product {
   id: string;
@@ -96,7 +96,9 @@ const CategoryPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {[...Array(8)].map((_, i) => (
                   <div key={i} className="animate-pulse">
-                    <div className="aspect-square bg-gray-200 rounded-lg"></div>
+                    <div className="aspect-[4/5] bg-gray-200 rounded-3xl mb-4"></div>
+                    <div className="h-6 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
                   </div>
                 ))}
               </div>
@@ -142,7 +144,7 @@ const CategoryPage = () => {
           {products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
               {products.map((product, index) => (
-                <ProductCard
+                <ProductRouter
                   key={product.id}
                   product={product}
                   className="animate-fade-in"

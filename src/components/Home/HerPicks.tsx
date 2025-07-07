@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import ProductCard from '@/components/Product/ProductCard';
+import ProductRouter from '@/components/Product/ProductRouter';
 
 interface Product {
   id: string;
@@ -63,7 +63,7 @@ const HerPicks = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[...Array(4)].map((_, i) => (
               <div key={i} className="animate-pulse">
-                <div className="aspect-[3/4] bg-cream-200 rounded-3xl mb-4"></div>
+                <div className="aspect-[4/5] bg-cream-200 rounded-3xl mb-4"></div>
                 <div className="h-6 bg-cream-200 rounded mb-2"></div>
                 <div className="h-4 bg-cream-200 rounded w-3/4"></div>
               </div>
@@ -89,7 +89,7 @@ const HerPicks = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {products.map((product, index) => (
-            <ProductCard
+            <ProductRouter
               key={product.id}
               product={product}
               className="animate-fade-in"

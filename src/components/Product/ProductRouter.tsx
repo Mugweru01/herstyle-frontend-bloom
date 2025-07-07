@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import ProductCard from './ProductCard';
 
 interface Product {
@@ -30,22 +29,14 @@ const ProductRouter: React.FC<ProductRouterProps> = ({
   className, 
   style 
 }) => {
-  const navigate = useNavigate();
-
-  const handleProductClick = () => {
-    // Navigate to product detail page
-    navigate(`/product/${product.slug || product.id}`);
-  };
-
+  // ProductCard now handles its own navigation, so we just pass through the props
   return (
-    <div onClick={handleProductClick} className="cursor-pointer">
-      <ProductCard
-        product={product}
-        onQuickView={onQuickView}
-        className={className}
-        style={style}
-      />
-    </div>
+    <ProductCard
+      product={product}
+      onQuickView={onQuickView}
+      className={className}
+      style={style}
+    />
   );
 };
 
