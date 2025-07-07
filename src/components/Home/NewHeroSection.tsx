@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-export const HERO_IMAGE_URL = 'https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/hero-images//hero%20background1.jpg';
+export const HERO_IMAGE_URL = 'https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/hero-images/heroimage.jpg';
 
 const NewHeroSection: React.FC = () => {
   return (
@@ -14,13 +14,8 @@ const NewHeroSection: React.FC = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-black/40"></div>
 
       <div className="relative z-10 container mx-auto px-4 h-full flex flex-col lg:flex-row items-start justify-center">
-        {/* Left Side: Image (hidden on mobile, full height on desktop) */}
-        <div className="hidden lg:block lg:w-1/2 h-full">
-          {/* Image is set as background of the section for full height effect */}
-        </div>
-
-        {/* Right Side: Content */}
-        <div className="w-full lg:w-1/2 text-center lg:text-left text-white p-8">
+        {/* Content */}
+        <div className="w-full lg:w-full text-center lg:text-left text-white p-8">
           {/* Optional Tag */}
           <span className="inline-block bg-pink-100 text-pink-700 text-xs px-3 py-1 rounded-full uppercase tracking-widest mb-4">
             New Drop

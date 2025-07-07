@@ -48,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
     if (isScrolled) {
       return 'bg-white shadow-sm'; // White when scrolled
     } else if (isHomePage && heroImageUrl) {
-      return 'bg-[#36454F] shadow-none'; // Dark red on hero page, not scrolled
+      return `bg-cover bg-center shadow-none`; // Use background image
     } else {
       return 'bg-white shadow-sm'; // Default to white for other pages
     }
@@ -76,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
   const getIconStyles = () => {
     const baseStyles = "p-2 rounded-2xl transition-all duration-300";
     if (isHomePage && heroImageUrl && !isScrolled) {
-      return `${baseStyles} hover:bg-white hover:text-[#36454F]`; // Adjust hover text color to match new background
+      return `${baseStyles} hover:bg-white hover:text-[#8B0000]`; // Adjust hover text color to match new background
     } else {
       return `${baseStyles} hover:bg-gray-200 hover:text-[#8B0000]`; // Adjust hover background and text color for white navbar
     }
@@ -93,7 +93,9 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${getNavbarStyles()}`}>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${getNavbarStyles()}`}
+        style={isHomePage && heroImageUrl && !isScrolled ? { backgroundImage: `url(${heroImageUrl})` } : {}}>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-20">
             {/* Mobile menu button */}
