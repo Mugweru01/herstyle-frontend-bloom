@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-export const HERO_IMAGE_URL = '/lovable-uploads/e544a89b-821a-478e-a7b3-1138b7aee478.png';
+export const HERO_IMAGE_URL = 'https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/hero-images//hero%20background1.jpg';
 
 const NewHeroSection: React.FC = () => {
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-cover bg-center"
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cover bg-center pt-16"
       style={{
         backgroundImage: `url(${HERO_IMAGE_URL})`,
       }}
@@ -13,7 +13,7 @@ const NewHeroSection: React.FC = () => {
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-black/40"></div>
 
-      <div className="relative z-10 container mx-auto px-4 h-full flex flex-col lg:flex-row items-center justify-center">
+      <div className="relative z-10 container mx-auto px-4 h-full flex flex-col lg:flex-row items-start justify-center">
         {/* Left Side: Image (hidden on mobile, full height on desktop) */}
         <div className="hidden lg:block lg:w-1/2 h-full">
           {/* Image is set as background of the section for full height effect */}

@@ -48,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
     if (isScrolled) {
       return 'bg-white shadow-sm'; // White when scrolled
     } else if (isHomePage && heroImageUrl) {
-      return 'bg-[#8A3324] shadow-none'; // Dark red on hero page, not scrolled
+      return 'bg-[#36454F] shadow-none'; // Dark red on hero page, not scrolled
     } else {
       return 'bg-white shadow-sm'; // Default to white for other pages
     }
@@ -76,7 +76,7 @@ const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
   const getIconStyles = () => {
     const baseStyles = "p-2 rounded-2xl transition-all duration-300";
     if (isHomePage && heroImageUrl && !isScrolled) {
-      return `${baseStyles} hover:bg-white hover:text-[#8A3324]`; // Adjust hover text color to match new background
+      return `${baseStyles} hover:bg-white hover:text-[#36454F]`; // Adjust hover text color to match new background
     } else {
       return `${baseStyles} hover:bg-gray-200 hover:text-[#8B0000]`; // Adjust hover background and text color for white navbar
     }
