@@ -170,7 +170,7 @@ const Wishlist = () => {
                 >
                   <div className="relative aspect-[3/4] overflow-hidden">
                     {item.products.images && item.products.images[0] ? (
-                      <img
+                      <img alt={item.name}
                         src={item.products.images[0]}
                         alt={item.products.name}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"

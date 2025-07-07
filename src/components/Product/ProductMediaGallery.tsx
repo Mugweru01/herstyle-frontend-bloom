@@ -36,7 +36,7 @@ const ProductMediaGallery: React.FC<ProductMediaGalleryProps> = ({
             className="w-full h-full object-contain"
           />
         ) : (
-          <img
+          <img alt="Product image"
             src={mediaItems.length > 0 ? mediaItems[currentImageIndex]?.url : '/placeholder.svg'}
             alt={productName}
             className="w-full h-full object-contain"

@@ -6,26 +6,25 @@ import { Card, CardContent } from '@/components/ui/card';
 import Layout from '@/components/Layout/Layout';
 import { fetchBlogPosts } from '../services/blogService';
 
-interface BlogPost {
-  id: string;
-  created_at: string;
-  title: string;
-  slug: string;
-  image_url: string;
-  content: string;
-}
+import { Database } from '@/types/supabase';
+
+type BlogPost = Database['public']['Tables']['blogs']['Row'];
 
 const Blog: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const postsPerPage = 6; // Number of posts per page
 
   useEffect(() => {
     const getPosts = async () => {
       try {
         setLoading(true);
-        const data = await fetchBlogPosts();
+        const { data, count } = await fetchBlogPosts(currentPage, postsPerPage);
         setPosts(data || []);
+        setTotalPages(Math.ceil((count || 0) / postsPerPage));
       } catch (err) {
         setError('Failed to fetch posts.');
         console.error(err);
@@ -34,7 +33,12 @@ const Blog: React.FC = () => {
       }
     };
     getPosts();
-  }, []);
+  }, [currentPage]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo(0, 0); // Scroll to top on page change
+  };
 
   const calculateReadingTime = (text: string): number => {
     const wordsPerMinute = 200;
@@ -85,7 +89,14 @@ const Blog: React.FC = () => {
           {posts.map((post) => (
             <Card key={post.id} className="overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out group">
               <Link to={`/blog/${post.slug}`}>
-                <img src={post.image_url} alt={post.title} className="w-full h-48 object-cover rounded-t-2xl transform group-hover:scale-105 transition-transform duration-300 ease-in-out" />
+                <img
+                  src={post.image_url}
+                  alt={post.title}
+                  className="w-full h-48 object-cover rounded-t-2xl transform group-hover:scale-105 transition-transform duration-300 ease-in-out"
+                  loading="lazy"
+                  srcSet={`${post.image_url}?w=400 400w, ${post.image_url}?w=800 800w, ${post.image_url}?w=1200 1200w`}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
               </Link>
               <CardContent className="p-6">
                 <p className="text-sm text-pink-600 mb-2">
@@ -118,6 +129,34 @@ const Blog: React.FC = () => {
             </div>
           )}
         </div>
+
+        {totalPages > 1 && (
+          <div className="flex justify-center space-x-2 mt-8">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 border rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
+            >
+              Previous
+            </button>
+            {[...Array(totalPages)].map((_, index) => (
+              <button
+                key={index + 1}
+                onClick={() => handlePageChange(index + 1)}
+                className={`px-4 py-2 border rounded-md ${currentPage === index + 1 ? 'bg-pink-600 text-white' : 'text-gray-700 bg-white hover:bg-gray-100'}`}
+              >
+                {index + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-4 py-2 border rounded-md text-gray-700 bg-white hover:bg-gray-100 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </Layout>
   );

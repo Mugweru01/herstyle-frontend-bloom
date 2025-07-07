@@ -28,7 +28,7 @@ const ProductImage: React.FC<ProductImageProps> = ({
   return (
     <div className="relative aspect-[3/4] overflow-hidden bg-gradient-to-br from-cream-50 to-blush-50">
       {images && images[0] && !imageError ? (
-        <img
+        <img alt={alt}
           src={images[0]}
           alt={name}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"

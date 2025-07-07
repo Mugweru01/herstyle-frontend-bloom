@@ -36,7 +36,7 @@ const ProductLightbox: React.FC<ProductLightboxProps> = ({
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking video
           />
         ) : (
-          <img
+          <img alt="Product image"
             src={media.url}
             alt="Zoomed Product Media"
             className="max-w-full max-h-full object-contain rounded-lg shadow-xl"

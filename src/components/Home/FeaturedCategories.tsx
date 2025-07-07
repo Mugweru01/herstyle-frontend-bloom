@@ -109,7 +109,7 @@ const FeaturedCategories = () => {
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className="aspect-[3/4] relative">
-                <img
+                <img alt={category.name}
                   src={imageUrl}
                   alt={category.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"

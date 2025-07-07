@@ -1,5 +1,8 @@
-import { Toaster } from "@/components/ui/sonner";
-import ErrorBoundary from "./components/ui/ErrorBoundary";
+import ErrorBoundary from './components/ui/ErrorBoundary';
+import { Toaster } from './components/ui/toaster';
+import { useLocation } from 'react-router-dom';
+import { pageview } from './lib/analytics';
+import { useEffect } from 'react';
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -25,17 +28,22 @@ import StaticPage from "./pages/StaticPage";
 
 const queryClient = new QueryClient();
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+
+  useEffect(() => {
+    pageview(new URL(window.location.origin + location.pathname + location.search));
+  }, [location]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <TooltipProvider>
           <Toaster />
           <ErrorBoundary>
-            <BrowserRouter>
               <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Index />} />
+              <Routes>
+        <Route path="/" element={<Index />} />
               <Route path="/collections" element={<Collections />} />
               <Route path="/collections/:category" element={<CategoryPage />} />
               <Route path="/beauty" element={<Beauty />} />
@@ -68,11 +76,18 @@ function App() {
               
               <Route path="*" element={<NotFound />} />
             </Routes>
-            </BrowserRouter>
           </ErrorBoundary>
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 

@@ -5,11 +5,14 @@ import { UserMenu } from './UserMenu';
 import { CartSidebar } from '@/components/Cart/CartSidebar';
 import { useCart } from '@/hooks/useCart';
 
-const Navbar = () => {
+interface NavbarProps {
+  heroImageUrl?: string;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ heroImageUrl }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [heroTheme, setHeroTheme] = useState('dark');
   const location = useLocation();
   const { getTotalItems } = useCart();
 
@@ -18,26 +21,10 @@ const Navbar = () => {
       setIsScrolled(window.scrollY > 20);
     };
 
-    // Listen for hero theme changes
-    const handleThemeChange = () => {
-      const theme = document.documentElement.getAttribute('data-hero-theme') || 'dark';
-      setHeroTheme(theme);
-    };
-
-    // Initial theme check
-    handleThemeChange();
-
-    // Set up observers
     window.addEventListener('scroll', handleScroll);
-    const observer = new MutationObserver(handleThemeChange);
-    observer.observe(document.documentElement, { 
-      attributes: true, 
-      attributeFilter: ['data-hero-theme'] 
-    });
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      observer.disconnect();
     };
   }, []);
 
@@ -58,47 +45,50 @@ const Navbar = () => {
 
   // Dynamic navbar background styles
   const getNavbarStyles = () => {
-    if (isScrolled || !isHomePage) {
-      return 'bg-white/95 backdrop-blur-md shadow-sm';
+    if (isScrolled) {
+      return 'bg-white shadow-sm'; // White when scrolled
+    } else if (isHomePage && heroImageUrl) {
+      return 'bg-[#8A3324] shadow-none'; // Dark red on hero page, not scrolled
+    } else {
+      return 'bg-white shadow-sm'; // Default to white for other pages
     }
-    // Keep transparent on hero
-    return 'bg-transparent';
   };
 
-  // Dynamic text styles based on hero theme and scroll state
+  // Dynamic text styles
   const getTextStyles = () => {
-    if (isScrolled || !isHomePage) {
-      return 'text-gray-700';
+    if (isHomePage && heroImageUrl && !isScrolled) {
+      return 'text-white';
+    } else {
+      return 'text-gray-800'; // Dark text for white background
     }
-    // Change text color based on hero theme for visibility
-    return heroTheme === 'light' ? 'text-gray-900' : 'text-white';
   };
 
   // Dynamic logo styles
   const getLogoStyles = () => {
-    if (isScrolled || !isHomePage) {
-      return 'text-gradient'; // Use gradient when scrolled or not on home
+    if (isHomePage && heroImageUrl && !isScrolled) {
+      return 'text-white';
+    } else {
+      return 'text-gray-800'; // Dark logo text for white background
     }
-    // Change logo color based on hero theme
-    return heroTheme === 'light' ? 'text-gray-900' : 'text-white';
   };
 
   // Dynamic icon hover styles
   const getIconStyles = () => {
     const baseStyles = "p-2 rounded-2xl transition-all duration-300";
-    if (isScrolled || !isHomePage) {
-      return `${baseStyles} hover:bg-cream-100`;
+    if (isHomePage && heroImageUrl && !isScrolled) {
+      return `${baseStyles} hover:bg-white hover:text-[#8A3324]`; // Adjust hover text color to match new background
+    } else {
+      return `${baseStyles} hover:bg-gray-200 hover:text-[#8B0000]`; // Adjust hover background and text color for white navbar
     }
-    // Transparent hover effect on hero
-    return `${baseStyles} hover:bg-white/20 hover:backdrop-blur-sm`;
   };
 
   // Dynamic active link styles
   const getActiveLinkColor = () => {
-    if (isScrolled || !isHomePage) {
-      return 'text-blush-500';
+    if (isHomePage && heroImageUrl && !isScrolled) {
+      return 'text-white';
+    } else {
+      return 'text-gray-800'; // Dark active link text for white background
     }
-    return heroTheme === 'light' ? 'text-blush-600' : 'text-blush-300';
   };
 
   return (
@@ -117,7 +107,7 @@ const Navbar = () => {
 
             {/* Logo */}
             <Link to="/" className="flex-shrink-0 flex items-center space-x-3">
-              <img 
+              <img alt="Herstyle logo" 
                 src="https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/logo/herstylelogo.png" 
                 alt="Herstyle Logo" 
                 className="h-8 lg:h-10 w-auto"

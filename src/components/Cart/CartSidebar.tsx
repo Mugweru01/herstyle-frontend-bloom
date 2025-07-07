@@ -68,7 +68,7 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                     <div key={item.id} className="flex items-center space-x-4 border-b pb-4">
                       <div className="w-16 h-16 bg-gray-100 rounded-lg overflow-hidden">
                         {item.product.images && item.product.images[0] && (
-                          <img
+                          <img alt={item.name}
                             src={item.product.images[0]}
                             alt={item.product.name}
                             className="w-full h-full object-cover"

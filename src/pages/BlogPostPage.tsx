@@ -4,14 +4,9 @@ import { useParams, Link } from 'react-router-dom';
 import Layout from '@/components/Layout/Layout';
 import { fetchBlogPostBySlug } from '../services/blogService';
 
-interface BlogPost {
-  id: string;
-  created_at: string;
-  title: string;
-  slug: string;
-  image_url: string;
-  content: string;
-}
+import { Database } from '@/types/supabase';
+
+type BlogPost = Database['public']['Tables']['blogs']['Row'];
 
 const BlogPostPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -78,7 +73,14 @@ const BlogPostPage: React.FC = () => {
           ← Back to blog
         </Link>
         <div className="relative h-96 overflow-hidden">
-          <img src={post.image_url} alt={post.title} className="w-full h-full object-cover rounded-b-2xl shadow-lg" />
+          <img
+            src={post.image_url}
+            alt={post.title}
+            className="w-full h-full object-cover rounded-b-2xl shadow-lg"
+            loading="lazy"
+            srcSet={`${post.image_url}?w=600 600w, ${post.image_url}?w=1200 1200w, ${post.image_url}?w=1800 1800w`}
+            sizes="100vw"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
           <h1 className="absolute bottom-8 left-1/2 -translate-x-1/2 text-center text-5xl md:text-6xl font-serif font-bold text-white z-10 max-w-4xl leading-tight">
             {post.title}
@@ -101,7 +103,13 @@ blockquote: ({ node, ...props }) => (
                   <blockquote className="border-l-4 border-pink-400 pl-4 italic text-gray-600" {...props} />
                 ),
                 img: ({ node, ...props }) => (
-                  <img className="rounded-lg shadow-md my-4" {...props} />
+                  <img
+                  className="rounded-lg shadow-md my-4"
+                  {...props}
+                  loading="lazy"
+                  srcSet={`${props.src}?w=400 400w, ${props.src}?w=800 800w`}
+                  sizes="(max-width: 768px) 100vw, 800px"
+                />
                 ),
               }}
             >

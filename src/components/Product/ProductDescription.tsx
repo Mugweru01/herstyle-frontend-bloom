@@ -102,7 +102,7 @@ const ProductDescription: React.FC<ProductDescriptionProps> = ({
             <div className="relative">
               <div className="aspect-square bg-gradient-to-br from-cream-100 to-blush-100">
                 {product.images && product.images[selectedImage] ? (
-                  <img
+                  <img alt="Product detail image"
                     src={product.images[selectedImage]}
                     alt={product.name}
                     className="w-full h-full object-cover"

@@ -54,7 +54,7 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-3 mb-4">
-              <img 
+              <img alt="Herstyle logo" 
                 src="https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/logo/herstylelogo.png" 
                 alt="Herstyle Logo" 
                 className="h-8 w-auto"

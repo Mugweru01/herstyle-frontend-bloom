@@ -139,7 +139,7 @@ const Testimonials = () => {
 
                         <div className="flex items-center justify-center space-x-4">
                           <div className="relative">
-                            <img
+                            <img alt="Customer avatar"
                               src={testimonial.customer_image_url}
                               alt={testimonial.customer_name}
                               className="w-16 h-16 rounded-full object-cover shadow-lg ring-4 ring-white"

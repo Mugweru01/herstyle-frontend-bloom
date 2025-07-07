@@ -118,7 +118,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         )}
         
         {product.images?.[0] && !imageError ? (
-          <img
+          <img alt={product.name}
             src={product.images[0]}
             alt={product.name}
             className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${

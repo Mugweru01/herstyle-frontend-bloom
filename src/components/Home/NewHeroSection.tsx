@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
+export const HERO_IMAGE_URL = '/lovable-uploads/e544a89b-821a-478e-a7b3-1138b7aee478.png';
 
 const NewHeroSection: React.FC = () => {
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden bg-cover bg-center"
       style={{
-        backgroundImage: `url('/lovable-uploads/e544a89b-821a-478e-a7b3-1138b7aee478.png')`,
+        backgroundImage: `url(${HERO_IMAGE_URL})`,
       }}
     >
       {/* Gradient Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/20"></div>
+      <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-black/40"></div>
 
       <div className="relative z-10 container mx-auto px-4 h-full flex flex-col lg:flex-row items-center justify-center">
         {/* Left Side: Image (hidden on mobile, full height on desktop) */}
