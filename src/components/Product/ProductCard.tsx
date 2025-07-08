@@ -27,8 +27,8 @@ interface ProductCardProps {
   style?: React.CSSProperties;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ 
-  product, 
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
   onQuickView,
   className = "",
   style
@@ -143,7 +143,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">
           {discountPercentage > 0 && (
             <span className="px-3 py-1.5 bg-gradient-to-r from-dustyrose-500 to-blush-500 text-white text-xs font-bold rounded-full shadow-lg backdrop-blur-sm">
-              -{discountPercentage}% OFF
+              -{discountPercentage}%
             </span>
           )}
           {isOutOfStock && (

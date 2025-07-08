@@ -1,46 +1,56 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Search as SearchIcon } from 'lucide-react';
-import { ProductCard } from '@/components/Product/ProductCard';
+import ProductCard from '@/components/Product/ProductCard';
+import { useSupabase } from '@/hooks/useSupabase';
 
 interface Product {
   id: string;
   name: string;
   price: number;
-  images: string[];
+  image_urls: string[];
   category: string;
 }
 
-// Dummy product data for demonstration
-const dummyProducts: Product[] = [
-  { id: '1', name: 'Elegant Silk Dress', price: 1200, images: ['https://via.placeholder.com/300x300?text=Silk+Dress'], category: 'Dresses' },
-  { id: '2', name: 'Classic Leather Handbag', price: 850, images: ['https://via.placeholder.com/300x300?text=Leather+Handbag'], category: 'Accessories' },
-  { id: '3', name: 'Vintage Denim Jacket', price: 950, images: ['https://via.placeholder.com/300x300?text=Denim+Jacket'], category: 'Jackets' },
-  { id: '4', name: 'Boho Chic Blouse', price: 450, images: ['https://via.placeholder.com/300x300?text=Boho+Blouse'], category: 'Tops' },
-  { id: '5', name: 'Minimalist Silver Necklace', price: 300, images: ['https://via.placeholder.com/300x300?text=Silver+Necklace'], category: 'Jewelry' },
-  { id: '6', name: 'Comfortable Running Shoes', price: 700, images: ['https://via.placeholder.com/300x300?text=Running+Shoes'], category: 'Footwear' },
-];
-
 const SearchPage: React.FC = () => {
+  const { supabase } = useSupabase();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const initialQuery = queryParams.get('query') || '';
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    handleSearch(initialQuery);
+    if (initialQuery) {
+      handleSearch(initialQuery);
+    }
   }, [initialQuery]);
 
-  const handleSearch = (query: string) => {
-    const filteredResults = dummyProducts.filter(product =>
-      product.name.toLowerCase().includes(query.toLowerCase()) ||
-      product.category.toLowerCase().includes(query.toLowerCase())
-    );
-    setSearchResults(filteredResults);
+  const handleSearch = async (query: string) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error } = await supabase
+        .from('products')
+        .select('id, name, price, image_urls, category')
+        .or(`name.ilike.%${query}%,category.ilike.%${query}%`);
+
+      if (error) {
+        throw error;
+      }
+
+      setSearchResults(data || []);
+    } catch (err: any) {
+      setError(err.message);
+      setSearchResults([]);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -64,7 +74,11 @@ const SearchPage: React.FC = () => {
         </Button>
       </form>
 
-      {searchResults.length === 0 && searchQuery !== '' ? (
+      {loading ? (
+        <p className="text-center text-gray-600">Loading results...</p>
+      ) : error ? (
+        <p className="text-center text-red-600">Error: {error}</p>
+      ) : searchResults.length === 0 && searchQuery !== '' ? (
         <p className="text-center text-gray-600">No results found for "{searchQuery}".</p>
       ) : searchResults.length === 0 && searchQuery === '' ? (
         <p className="text-center text-gray-600">Start typing to search for products.</p>

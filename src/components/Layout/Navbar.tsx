@@ -89,7 +89,9 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4 pr-4">
-            <Search className={`h-5 w-5 ${getTextColorClasses()} cursor-pointer`} />
+            <Link to="/search">
+              <Search className={`h-5 w-5 ${getTextColorClasses()} cursor-pointer`} />
+            </Link>
             {user ? (
               <button onClick={handleLogout} className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>Logout</button>
             ) : (
