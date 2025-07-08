@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { X, Plus, Minus, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -126,8 +127,8 @@ export const CartSidebar = ({ isOpen, onClose }: CartSidebarProps) => {
                   <span>{formatPrice(getTotalPrice())}</span>
                 </div>
                 
-                <Button className="w-full" size="lg">
-                  Checkout
+                <Button asChild className="w-full" size="lg">
+                  <Link to="/checkout" onClick={onClose}>Checkout</Link>
                 </Button>
               </div>
             </>

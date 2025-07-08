@@ -24,6 +24,8 @@ const Blog = lazy(() => import('./pages/Blog'));
 import Wishlist from "./pages/Wishlist";
 import NotFound from "./pages/NotFound";
 import ContactUs from "./pages/ContactUs";
+import Checkout from "./pages/Checkout";
+import OrderConfirmation from "./pages/OrderConfirmation";
 import StaticPage from "./pages/StaticPage";
 
 const queryClient = new QueryClient();
@@ -64,6 +66,8 @@ function AppContent() {
                 </Suspense>
               } />
               <Route path="/wishlist" element={<Wishlist />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
               
               {/* Static Pages */}
               <Route path="/shipping-info" element={<StaticPage />} />

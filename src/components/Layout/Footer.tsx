@@ -1,7 +1,8 @@
 
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Mail, Instagram, Facebook, Linkedin, MapPin, Phone } from 'lucide-react';
+import { Instagram, Facebook, MapPin, Phone, Twitter, Mail } from 'lucide-react';
+import { TikTok } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
 interface FooterPage {
@@ -50,9 +51,9 @@ const Footer = () => {
   return (
     <footer className="bg-gradient-to-b from-cream-50 to-blush-50 border-t border-cream-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand Section */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-2">
             <div className="flex items-center space-x-3 mb-4">
               <img alt="Herstyle logo" 
                 src="https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/logo/herstylelogo.png" 
@@ -83,7 +84,7 @@ const Footer = () => {
             {/* Contact */}
             <div className="flex items-center space-x-2 mb-6">
               <Phone size={16} className="text-blush-500" />
-              <span className="text-sm text-gray-600">+254 700 123 456</span>
+              <span className="text-sm text-gray-600">07 96 94 51 90</span>
             </div>
 
             {/* Social Media */}
@@ -98,6 +99,13 @@ const Footer = () => {
               <a 
                 href="#" 
                 className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200 group" 
+                aria-label="Twitter"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-twitter text-blush-500 group-hover:scale-110 transition-transform"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17-18 11.6 2.2.1 4.4-.6 6-2 1.1 0 2.1-.3 2.9-.8 1.8 0 3.4-.8 4.4-2.2 1.2.7 2.1 1.1 3.1 1.1 1.4-.1 2.7-.8 3.8-1.6 0 0-.7 1.3-1.6 2.1 1.1.2 2.1.4 3.2.5-.8.8-1.7 1.4-2.6 1.9z"/></svg>
+              </a>
+              <a 
+                href="#" 
+                className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200 group" 
                 aria-label="Facebook"
               >
                 <Facebook size={18} className="text-blush-500 group-hover:scale-110 transition-transform" />
@@ -105,15 +113,15 @@ const Footer = () => {
               <a 
                 href="#" 
                 className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200 group" 
-                aria-label="LinkedIn"
+                aria-label="TikTok"
               >
-                <Linkedin size={18} className="text-blush-500 group-hover:scale-110 transition-transform" />
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tiktok text-blush-500 group-hover:scale-110 transition-transform"><path d="M21 8V5c0-1.7-.3-3.2-1.4-4.3-.9-.9-2.1-1.4-3.5-1.7-1.4-.3-2.8-.2-4.2.2-.7.2-1.4.5-2.1.9-.7.4-1.3.9-1.8 1.5-.5.6-.9 1.2-1.2 1.9-.3.7-.5 1.4-.5 2.1v3.5c0 .7.2 1.4.5 2.1.3.7.7 1.3 1.2 1.8.5.5 1.1.9 1.8 1.2.7.3 1.4.5 2.1.5h3.5c.7 0 1.4-.2 2.1-.5.7-.3 1.3-.7 1.8-1.2.5-.5.9-1.1 1.2-1.8.3-.7.5-1.4.5-2.1z"/><path d="M12 21v-3.5c0-.7-.2-1.4-.5-2.1-.3-.7-.7-1.3-1.2-1.8-.5-.5-1.1-.9-1.8-1.2-.7-.3-1.4-.5-2.1-.5H4"/></svg>
               </a>
             </div>
           </div>
 
           {/* Shop Links */}
-          <div>
+          <div className="lg:col-span-1">
             <h3 className="font-playfair font-semibold text-gray-900 text-lg mb-6 border-b border-cream-200 pb-2">
               Shop
             </h3>
@@ -162,7 +170,7 @@ const Footer = () => {
           </div>
 
           {/* Support & Info - Clean, Styled Static Pages */}
-          <div>
+          <div className="lg:col-span-1">
             <h3 className="font-playfair font-semibold text-gray-900 text-lg mb-6 border-b border-cream-200 pb-2">
               Support & Info
             </h3>
@@ -183,7 +191,7 @@ const Footer = () => {
           </div>
 
           {/* Newsletter */}
-          <div>
+          <div className="lg:col-span-2">
             <h3 className="font-playfair font-semibold text-gray-900 text-lg mb-4">
               Stay Connected
             </h3>

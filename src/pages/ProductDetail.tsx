@@ -41,10 +41,11 @@ const ProductDetail = () => {
       setError(null);
       try {
         // Fetch main product
+        const formattedSlug = slug.replace(/-/g, ' ');
         const { data: productData, error: productError } = await supabase
           .from('products')
           .select('*, categories(*)')
-          .eq('slug', slug)
+          .eq('slug', formattedSlug)
           .single();
 
         if (productError) {
@@ -156,6 +157,7 @@ const ProductDetail = () => {
                 sizes={['XS', 'S', 'M', 'L', 'XL']}
                 inStock={true}
               />
+              {console.log('Product ID:', product.id)}
             </div>
 
 

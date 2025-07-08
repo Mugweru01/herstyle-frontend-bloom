@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useCart } from '@/hooks/useCart';
 
 interface ProductInfoSectionProps {
   product: {
+    id: string;
     name: string;
     category?: { slug: string; name: string } | null;
     currency?: string;
@@ -13,8 +15,9 @@ interface ProductInfoSectionProps {
 }
 
 const ProductInfoSection: React.FC<ProductInfoSectionProps> = ({ product }) => {
+  const { addToCart } = useCart();
   return (
-    <div className="lg:w-1/2 w-full p-4 lg:p-0">
+    <div className="lg:w-1/2 w-full p-4 lg:p-0" data-product-id={product.id}>
       {/* Breadcrumb Navigation */}
       <nav className="text-sm text-gray-600 mb-2">
         <Link to="/" className="hover:underline">Home</Link> /
@@ -73,7 +76,10 @@ const ProductInfoSection: React.FC<ProductInfoSectionProps> = ({ product }) => {
 
       {/* CTA Buttons */}
       <div className="flex space-x-2 mb-6">
-        <button className="flex-1 bg-blush-600 text-white py-2 px-4 rounded-full text-md font-semibold hover:bg-blush-700 transition-colors duration-300 shadow-lg">
+        <button
+          className="flex-1 bg-blush-600 text-white py-2 px-4 rounded-full text-md font-semibold hover:bg-blush-700 transition-colors duration-300 shadow-lg"
+          onClick={() => addToCart(product.id)}
+        >
           Add to Cart
         </button>
         <button className="flex-1 border border-blush-600 text-blush-600 py-2 px-4 rounded-full text-md font-semibold hover:bg-blush-50 transition-colors duration-300">

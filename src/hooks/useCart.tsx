@@ -56,11 +56,28 @@ export const useCart = () => {
       setLoading(true);
       
       // Fetch product details
-      const { data: product, error } = await supabase
+      const { data: products, error } = await supabase
         .from('products')
         .select('id, name, price, images')
-        .eq('id', productId)
-        .single();
+        .eq('id', productId);
+
+      if (error) throw error;
+
+      if (!products || products.length === 0) {
+        toast({
+          title: 'Product not found',
+          description: 'The requested product could not be found',
+          variant: 'destructive',
+        });
+        return;
+      }
+
+      if (products.length > 1) {
+        console.warn('Multiple products found for ID:', productId);
+        // Optionally handle this case, e.g., pick the first one or show an error
+      }
+
+      const product = products[0];
 
       if (error) throw error;
 
