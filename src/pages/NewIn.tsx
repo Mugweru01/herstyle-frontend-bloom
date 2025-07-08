@@ -153,12 +153,7 @@ const NewIn = () => {
                   <div className="absolute -top-2 -right-2 px-3 py-1 bg-gradient-to-r from-blush-500 to-dustyrose-500 text-white text-xs font-semibold rounded-full shadow-lg z-10">
                     New
                   </div>
-                  {/* Date added */}
-                  <div className="absolute bottom-4 left-4 right-4 text-center">
-                    <span className="text-xs text-blush-600 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full">
-                      Added {formatDate(product.created_at)}
-                    </span>
-                  </div>
+
                 </div>
               ))}
             </div>

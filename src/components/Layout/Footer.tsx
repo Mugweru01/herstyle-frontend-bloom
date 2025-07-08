@@ -35,7 +35,7 @@ const Footer = () => {
           <h3 className="text-lg font-semibold text-gray-800 mb-4">Shop</h3>
           <ul className="space-y-2">
             <li><Link to="/" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Home</Link></li>
-            <li><Link to="/new-arrivals" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">New Arrivals</Link></li>
+            <li><Link to="/new-in" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">New In</Link></li>
             <li><Link to="/collections" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Collections</Link></li>
             <li><Link to="/beauty" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Beauty</Link></li>
             <li><Link to="/accessories" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Accessories</Link></li>
@@ -48,9 +48,9 @@ const Footer = () => {
           <ul className="space-y-2">
             <li><Link to="/about" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">About Herstyle</Link></li>
             <li><Link to="/contact" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Contact Us</Link></li>
-            <li><Link to="/customer-service" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Customer Service</Link></li>
-            <li><Link to="/faqs" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">FAQs</Link></li>
-            <li><Link to="/returns-exchanges" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Returns & Exchanges</Link></li>
+            <li><Link to="/contact-us" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Customer Service</Link></li>
+            <li><Link to="/faq" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">FAQs</Link></li>
+            <li><Link to="/returns-policy" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Returns & Exchanges</Link></li>
             <li><Link to="/shipping-info" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Shipping Info</Link></li>
             <li><Link to="/size-guide" className="text-gray-600 hover:text-gray-800 text-sm transition-colors duration-300">Size Guide</Link></li>
           </ul>
@@ -79,7 +79,7 @@ const Footer = () => {
       <div className="border-t border-gray-200 mt-10 pt-6 text-center">
         <p className="text-gray-500 text-xs">
           <Link to="/privacy-policy" className="hover:underline mx-2">Privacy Policy</Link>
-          <Link to="/terms-conditions" className="hover:underline mx-2">Terms & Conditions</Link>
+          <Link to="/terms-of-service" className="hover:underline mx-2">Terms & Conditions</Link>
         </p>
       </div>
     </footer>

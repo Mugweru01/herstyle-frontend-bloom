@@ -195,9 +195,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Price */}
         <div className="flex items-baseline space-x-1">
-          <span className="text-sm font-bold text-gray-900">{formatPrice(currentPrice)}</span>
+          <span className="text-base font-bold text-gray-900">{formatPrice(currentPrice)}</span>
           {product.sale_price && product.price && product.sale_price < product.price && (
-            <span className="text-xs text-gray-500 line-through">{formatPrice(product.price)}</span>
+            <span className="text-sm text-gray-500 line-through">{formatPrice(product.price)}</span>
           )}
         </div>
       </div>

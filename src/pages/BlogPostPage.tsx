@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
+import rehypeRaw from 'rehype-raw';
 import { useParams, Link } from 'react-router-dom';
 
 import { fetchBlogPostBySlug } from '../services/blogService';
@@ -84,8 +85,9 @@ const BlogPostPage: React.FC = () => {
 
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
-          <div className="prose lg:prose-xl font-sans leading-relaxed text-gray-700">
+          <div className="prose prose-pinkish lg:prose-xl font-sans leading-relaxed text-gray-700">
             <ReactMarkdown
+              rehypePlugins={[rehypeRaw]}
               components={{
                 h1: ({ node, ...props }) => <h1 className="font-serif text-gray-800" {...props} />,
 h2: ({ node, ...props }) => <h2 className="font-serif text-gray-800" {...props} />,
