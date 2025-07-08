@@ -182,54 +182,7 @@ const ProductDetail = () => {
 
         <HerstyleEnhancementSection />
 
-        {/* Premium Footer Design */}
-        <footer className="bg-gray-900 text-gray-300 py-16 mt-12 opacity-0 animate-fade-in animate-delay-700">
-          <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Column 1: Navigation */}
-            <div>
-              <h3 className="text-white text-lg font-semibold mb-4">Shop</h3>
-              <ul className="space-y-2">
-                <li><Link to="/collections" className="hover:text-white transition-colors duration-300">Collections</Link></li>
-                <li><Link to="/about" className="hover:text-white transition-colors duration-300">About</Link></li>
-                <li><Link to="/contact" className="hover:text-white transition-colors duration-300">Contact</Link></li>
-                <li><Link to="/blog" className="hover:text-white transition-colors duration-300">Blog</Link></li>
-              </ul>
-            </div>
 
-            {/* Column 2: Customer Care */}
-            <div>
-              <h3 className="text-white text-lg font-semibold mb-4">Customer Care</h3>
-              <ul className="space-y-2">
-                <li><Link to="/faq" className="hover:text-white transition-colors duration-300">FAQ</Link></li>
-                <li><Link to="/shipping" className="hover:text-white transition-colors duration-300">Shipping</Link></li>
-                <li><Link to="/returns" className="hover:text-white transition-colors duration-300">Returns</Link></li>
-                <li><Link to="/track-order" className="hover:text-white transition-colors duration-300">Track Order</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 3: Newsletter Signup */}
-            <div>
-              <h3 className="text-white text-lg font-semibold mb-4">Newsletter</h3>
-              <p className="text-sm mb-4">Stay updated with our latest collections and exclusive offers.</p>
-              <form className="flex">
-                <input
-                  type="email"
-                  placeholder="Your email address"
-                  className="flex-grow px-4 py-2 rounded-l-md bg-gray-800 border border-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
-                />
-                <button
-                  type="submit"
-                  className="bg-pink-600 hover:bg-pink-700 text-white px-6 py-2 rounded-r-md transition-colors duration-300"
-                >
-                  Subscribe
-                </button>
-              </form>
-            </div>
-          </div>
-          <div className="text-center text-gray-500 text-sm mt-12">
-            &copy; {new Date().getFullYear()} Herstyle. All rights reserved.
-          </div>
-        </footer>
       </div>
     </div>
   );
