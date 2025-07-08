@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import Navbar from './Navbar';
+
 import { HERO_IMAGE_URL } from '../Home/NewHeroSection';
 import Footer from './Footer';
 import CookieConsent from '@/components/CookieConsent/CookieConsent';
@@ -14,8 +14,8 @@ const Layout = ({ children }: LayoutProps) => {
   const isHomePage = location.pathname === '/';
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar heroImageUrl={isHomePage ? HERO_IMAGE_URL : undefined} />
-      <main className="flex-1 pt-16">
+
+      <main className="flex-1">
         {children}
       </main>
       <Footer />
