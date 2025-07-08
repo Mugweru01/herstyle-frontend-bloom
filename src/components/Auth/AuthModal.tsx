@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -62,9 +62,10 @@ export const AuthModal = ({ isOpen, onClose, initialMode = 'signin' }: AuthModal
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>
-            {mode === 'signin' ? 'Sign In' : 'Create Account'}
-          </DialogTitle>
+          <DialogTitle>{mode === 'signin' ? 'Login' : 'Sign Up'}</DialogTitle>
+          <DialogDescription>
+            {mode === 'signin' ? 'Enter your credentials to access your account.' : 'Create an account to get started.'}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           {mode === 'signup' && (

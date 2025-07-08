@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Navbar from '../Layout/Navbar';
+
 
 export const HERO_IMAGE_URL = 'https://cbxzzudqfyilqhamztvo.storage.supabase.co/v1/object/public/hero-images//cover%20photo.jpeg';
 
@@ -11,7 +11,7 @@ const NewHeroSection: React.FC = () => {
         backgroundImage: `url(${HERO_IMAGE_URL})`,
       }}
     >
-      <Navbar />
+
       {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-black/40"></div>
 

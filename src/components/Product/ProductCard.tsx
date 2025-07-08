@@ -111,7 +111,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       onClick={handleCardClick}
     >
       {/* Image Section */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-cream-50 to-blush-50">
+      <div className="relative aspect-[4/5] overflow-hidden bg-gradient-to-br from-cream-50 to-blush-50 rounded-t-3xl">
         {/* Loading skeleton */}
         {!imageLoaded && !imageError && (
           <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-300 to-gray-200 animate-pulse" />
@@ -158,115 +158,47 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
 
-        {/* Quick Actions */}
-        <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-4 group-hover:translate-x-0 z-10">
+        {/* Heart Icon */}
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={handleLoveToggle}
+          className={`absolute top-4 right-4 h-8 w-8 rounded-full backdrop-blur-md border transition-all duration-300 hover:scale-110 active:scale-95 z-10 ${
+            isLoved 
+              ? 'bg-blush-500 border-blush-500 text-white shadow-lg' 
+              : 'bg-white/90 border-white/50 text-gray-600 hover:bg-blush-500 hover:text-white hover:border-blush-500'
+          }`}
+        >
+          <Heart size={14} className={isLoved ? 'fill-current' : ''} />
+        </Button>
+
+        {/* Quick View Button (appears on hover) */}
+        {onQuickView && (
           <Button
             variant="ghost"
             size="icon"
-            onClick={handleLoveToggle}
-            className={`h-10 w-10 rounded-full backdrop-blur-md border transition-all duration-300 hover:scale-110 active:scale-95 ${
-              isLoved 
-                ? 'bg-blush-500 border-blush-500 text-white shadow-lg' 
-                : 'bg-white/90 border-white/50 text-gray-600 hover:bg-blush-500 hover:text-white hover:border-blush-500'
-            }`}
+            onClick={handleQuickView}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/90 backdrop-blur-md border border-white/50 text-gray-600 opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 active:scale-95 z-10"
           >
-            <Heart size={16} className={isLoved ? 'fill-current' : ''} />
+            <Eye size={20} />
           </Button>
-          
-          {onQuickView && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleQuickView}
-              className="h-10 w-10 rounded-full bg-white/90 backdrop-blur-md border border-white/50 text-gray-600 hover:bg-sage-500 hover:text-white hover:border-sage-500 transition-all duration-300 hover:scale-110 active:scale-95"
-            >
-              <Eye size={16} />
-            </Button>
-          )}
-        </div>
+        )}
 
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
       {/* Content Section */}
-      <div className="p-6 space-y-4">
-        {/* Category & Rating */}
-        <div className="flex items-center justify-between">
-          {product.category && (
-            <span className="text-xs font-medium text-blush-600 bg-blush-50 px-2 py-1 rounded-full uppercase tracking-wider">
-              {product.category}
-            </span>
-          )}
-          {product.rating && (
-            <div className="flex items-center gap-1">
-              <Star size={12} className="fill-gold-400 text-gold-400" />
-              <span className="text-xs font-medium text-gray-600">
-                {product.rating.toFixed(1)} ({product.reviews_count})
-              </span>
-            </div>
-          )}
-        </div>
-
+      <div className="p-4">
         {/* Product Name */}
-        <div>
-          <h3 className="font-playfair font-semibold text-lg text-gray-900 leading-tight group-hover:text-blush-600 transition-colors duration-300 line-clamp-2">
-            {product.name}
-          </h3>
-          {product.description && (
-            <p className="text-sm text-gray-500 mt-1 line-clamp-1">
-              {product.description}
-            </p>
-          )}
-        </div>
+        <h3 className="text-base font-semibold text-gray-800 line-clamp-1 mb-1">{product.name}</h3>
 
         {/* Price */}
-        <div className="flex items-center gap-2">
-          <span className="text-xl font-bold text-gray-900">
-            {formatPrice(currentPrice)}
-          </span>
-          {product.sale_price && (
-            <span className="text-sm text-gray-500 line-through">
-              {formatPrice(product.price)}
-            </span>
+        <div className="flex items-baseline space-x-1">
+          <span className="text-sm font-bold text-gray-900">{formatPrice(currentPrice)}</span>
+          {product.sale_price && product.price && product.sale_price < product.price && (
+            <span className="text-xs text-gray-500 line-through">{formatPrice(product.price)}</span>
           )}
-        </div>
-
-        {/* Stock Status */}
-        {product.stock !== undefined && (
-          <div className="text-xs font-medium">
-            {isOutOfStock ? (
-              <span className="text-red-500">Out of Stock</span>
-            ) : isLowStock ? (
-              <span className="text-gold-600">Low Stock</span>
-            ) : (
-              <span className="text-green-600">In Stock</span>
-            )}
-          </div>
-        )}
-
-        {/* Action Buttons */}
-        <div className="flex gap-2 pt-2">
-          <Button
-            onClick={handleBuyNow}
-            disabled={isOutOfStock}
-            className={`flex-1 h-12 rounded-2xl font-semibold text-sm transition-all duration-300 transform hover:scale-105 active:scale-95 ${
-              isOutOfStock
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-gradient-to-r from-blush-500 to-dustyrose-500 hover:from-blush-600 hover:to-dustyrose-600 text-white shadow-lg hover:shadow-xl'
-            }`}
-          >
-            {isOutOfStock ? 'Sold Out' : 'Buy Now'}
-          </Button>
-          
-          <Button
-            variant="outline"
-            onClick={handleAddToCart}
-            disabled={isOutOfStock}
-            className="h-12 w-12 rounded-2xl border-2 border-blush-200 hover:border-blush-400 hover:bg-blush-50 text-blush-600 transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <ShoppingBag size={18} />
-          </Button>
         </div>
       </div>
 

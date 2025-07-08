@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Search, Menu } from 'lucide-react';
+import SearchModal from '../SearchModal';
 import { AuthModal } from '../Auth/AuthModal';
 import { CartSidebar } from '../Cart/CartSidebar';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 
 interface User {
   id: string;
@@ -11,30 +12,20 @@ interface User {
   // Add other user properties as needed
 }
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const Navbar: React.FC = () => {
-  const location = useLocation();
-  const [isTransparent, setIsTransparent] = useState(true);
+interface NavbarProps {
+  isTransparent: boolean;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ isTransparent }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isCartSidebarOpen, setIsCartSidebarOpen] = useState(false);
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
 
-  const SCROLL_THRESHOLD = 50;
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsTransparent(scrollY < SCROLL_THRESHOLD); // Adjust threshold as needed
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -93,9 +84,9 @@ const Navbar: React.FC = () => {
             <div className="md:hidden">
               <Menu className={`h-6 w-6 ${getTextColorClasses()} cursor-pointer`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
             </div>
-            <Link to="/search">
+            <button onClick={() => setIsSearchModalOpen(true)}>
               <Search className={`h-5 w-5 ${getTextColorClasses()} cursor-pointer`} />
-            </Link>
+            </button>
             {user ? (
               <button onClick={handleLogout} className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>Logout</button>
             ) : (
@@ -107,8 +98,9 @@ const Navbar: React.FC = () => {
       </nav>
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       <CartSidebar isOpen={isCartSidebarOpen} onClose={() => setIsCartSidebarOpen(false)} />
+      <SearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)} />
 
-      {/* Mobile Menu */} 
+      {/* Mobile Menu */}
       <div className={`fixed top-0 right-0 h-full w-64 bg-[#447D9B] shadow-xl transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out z-50 md:hidden`}>
         <div className="flex justify-end p-4">
           <button onClick={() => setIsMobileMenuOpen(false)} className="text-white text-2xl">&times;</button>

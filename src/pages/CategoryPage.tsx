@@ -60,7 +60,7 @@ const CategoryPage = () => {
       const { data: productsData, error: productsError } = await supabase
         .from('products')
         .select('id, name, price, sale_price, images, slug, description, stock')
-        .eq('category', categoryData.name)
+        .eq('category_id', categoryData.id)
         .eq('status', true);
 
       if (productsError) {

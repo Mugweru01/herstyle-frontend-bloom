@@ -41,11 +41,10 @@ const ProductDetail = () => {
       setError(null);
       try {
         // Fetch main product
-        const formattedSlug = slug.replace(/-/g, ' ');
         const { data: productData, error: productError } = await supabase
           .from('products')
           .select('*, categories(*)')
-          .eq('slug', formattedSlug)
+          .eq('slug', slug)
           .single();
 
         if (productError) {
@@ -108,28 +107,7 @@ const ProductDetail = () => {
   return (
     <div className="min-h-screen bg-cream-50 text-gray-800 font-inter">
       <div className="container mx-auto px-4 py-8">
-        {/* Go Back Button */}
-        <div className="mb-8">
-          <Link
-            to="/"
-            className="inline-flex items-center text-gray-600 hover:text-blush-600 transition-colors duration-300"
-          >
-            <svg
-              className="-ml-1 mr-2 h-5 w-5"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                fillRule="evenodd"
-                d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
-                clipRule="evenodd"
-              />
-            </svg>
-            Continue Shopping
-          </Link>
-        </div>
+
 
 
         {loading ? (
@@ -157,6 +135,28 @@ const ProductDetail = () => {
                 sizes={['XS', 'S', 'M', 'L', 'XL']}
                 inStock={true}
               />
+              {/* Go Back Button */}
+              <div className="mt-8">
+                <Link
+                  to="/"
+                  className="inline-flex items-center px-4 py-2 bg-blush-500 text-white rounded-full shadow-md hover:bg-blush-600 transition-all duration-300 transform hover:scale-105 active:scale-95"
+                >
+                  <svg
+                    className="-ml-1 mr-2 h-5 w-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Continue Shopping
+                </Link>
+              </div>
               {console.log('Product ID:', product.id)}
             </div>
 
