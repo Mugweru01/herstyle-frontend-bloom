@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search } from 'lucide-react';
+import { Search, Menu } from 'lucide-react';
 import { AuthModal } from '../Auth/AuthModal';
 import { CartSidebar } from '../Cart/CartSidebar';
 import { createClient } from '@supabase/supabase-js';
@@ -20,6 +20,7 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const [isTransparent, setIsTransparent] = useState(true);
   const [user, setUser] = useState<User | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isCartSidebarOpen, setIsCartSidebarOpen] = useState(false);
 
@@ -79,7 +80,7 @@ const Navbar: React.FC = () => {
             <span className={`font-playfair text-2xl font-bold ${getTextColorClasses()}`}>HerStyle</span>
           </Link>
 
-          <div className="flex items-center justify-center">
+          <div className="hidden md:flex items-center justify-center">
             <ul className="flex space-x-4 font-inter text-lg font-medium">
               <li><Link to="/collections" className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>Collections</Link></li>
               <li><Link to="/new-in" className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>New In</Link></li>
@@ -89,6 +90,9 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4 pr-4">
+            <div className="md:hidden">
+              <Menu className={`h-6 w-6 ${getTextColorClasses()} cursor-pointer`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
+            </div>
             <Link to="/search">
               <Search className={`h-5 w-5 ${getTextColorClasses()} cursor-pointer`} />
             </Link>
@@ -103,6 +107,24 @@ const Navbar: React.FC = () => {
       </nav>
       <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
       <CartSidebar isOpen={isCartSidebarOpen} onClose={() => setIsCartSidebarOpen(false)} />
+
+      {/* Mobile Menu */} 
+      <div className={`fixed top-0 right-0 h-full w-64 bg-[#447D9B] shadow-xl transform ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} transition-transform duration-300 ease-in-out z-50 md:hidden`}>
+        <div className="flex justify-end p-4">
+          <button onClick={() => setIsMobileMenuOpen(false)} className="text-white text-2xl">&times;</button>
+        </div>
+        <ul className="flex flex-col items-center space-y-4 font-inter text-lg font-medium text-white">
+          <li><Link to="/collections" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">Collections</Link></li>
+          <li><Link to="/new-in" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">New In</Link></li>
+          <li><Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">About</Link></li>
+          <li><Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">Contact</Link></li>
+          {user ? (
+            <li><button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} className="hover:text-gray-300 transition-all duration-200">Logout</button></li>
+          ) : (
+            <li><button onClick={() => { setIsAuthModalOpen(true); setIsMobileMenuOpen(false); }} className="hover:text-gray-300 transition-all duration-200">Login / Account</button></li>
+          )}
+        </ul>
+      </div>
     </>
   );
 };
