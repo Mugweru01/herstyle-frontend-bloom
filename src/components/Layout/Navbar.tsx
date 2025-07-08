@@ -77,6 +77,7 @@ const Navbar: React.FC<NavbarProps> = ({ isTransparent }) => {
               <li><Link to="/new-in" className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>New In</Link></li>
               <li><Link to="/about" className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>About</Link></li>
               <li><Link to="/contact" className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>Contact</Link></li>
+              <li><Link to="/blog" className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>Blog</Link></li>
             </ul>
           </div>
 
@@ -110,6 +111,7 @@ const Navbar: React.FC<NavbarProps> = ({ isTransparent }) => {
           <li><Link to="/new-in" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">New In</Link></li>
           <li><Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">About</Link></li>
           <li><Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">Contact</Link></li>
+          <li><Link to="/blog" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">Blog</Link></li>
           {user ? (
             <li><button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} className="hover:text-gray-300 transition-all duration-200">Logout</button></li>
           ) : (
