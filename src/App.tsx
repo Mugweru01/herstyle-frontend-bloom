@@ -1,4 +1,3 @@
-import ErrorBoundary from './components/ui/ErrorBoundary';
 import { Toaster } from './components/ui/toaster';
 import { useLocation } from 'react-router-dom';
 import { pageview } from './lib/analytics';
@@ -18,8 +17,10 @@ import ProductDetail from "./pages/ProductDetail";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import React, { lazy, Suspense } from 'react';
+import ErrorBoundary from './components/ui/ErrorBoundary';
 const Blog = lazy(() => import('./pages/Blog'));
- const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
+const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
+const SearchPage = lazy(() => import('./pages/SearchPage'));
 
 import Wishlist from "./pages/Wishlist";
 import NotFound from "./pages/NotFound";
@@ -43,8 +44,8 @@ function AppContent() {
         <TooltipProvider>
           <Toaster />
           <ErrorBoundary>
-              <ScrollToTop />
-              <Routes>
+            <ScrollToTop />
+            <Routes>
         <Route path="/" element={<Index />} />
               <Route path="/collections" element={<Collections />} />
               <Route path="/collections/:category" element={<CategoryPage />} />
@@ -68,6 +69,11 @@ function AppContent() {
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+              <Route path="/search" element={
+                <Suspense fallback={<div>Loading Search...</div>}>
+                  <SearchPage />
+                </Suspense>
+              } />
               
               {/* Static Pages */}
               <Route path="/shipping-info" element={<StaticPage />} />
