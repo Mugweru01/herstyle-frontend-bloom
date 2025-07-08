@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
           </Link>
 
           <div className="hidden md:flex items-center justify-center">
-            <ul className="flex space-x-4 font-inter text-lg font-medium">
+            <ul className="flex space-x-4 font-playfair text-xl font-semibold">
               <li><Link to="/collections" className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>Collections</Link></li>
               <li><Link to="/new-in" className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>New In</Link></li>
               <li><Link to="/about" className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>About</Link></li>
@@ -113,7 +113,7 @@ const Navbar: React.FC = () => {
         <div className="flex justify-end p-4">
           <button onClick={() => setIsMobileMenuOpen(false)} className="text-white text-2xl">&times;</button>
         </div>
-        <ul className="flex flex-col items-center space-y-4 font-inter text-lg font-medium text-white">
+        <ul className="flex flex-col items-center space-y-4 font-playfair text-xl font-semibold text-white">
           <li><Link to="/collections" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">Collections</Link></li>
           <li><Link to="/new-in" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">New In</Link></li>
           <li><Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">About</Link></li>
