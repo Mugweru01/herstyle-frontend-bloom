@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-export const HERO_IMAGE_URL = 'https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/hero-images/heroimage.jpg';
+export const HERO_IMAGE_URL = 'https://cbxzzudqfyilqhamztvo.storage.supabase.co/v1/object/public/hero-images//cover%20photo.jpeg';
 
 const NewHeroSection: React.FC = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cover bg-center pt-16"
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-cover bg-center"
       style={{
         backgroundImage: `url(${HERO_IMAGE_URL})`,
       }}

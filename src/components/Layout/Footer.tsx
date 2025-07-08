@@ -101,7 +101,7 @@ const Footer = () => {
                 className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200 group" 
                 aria-label="Twitter"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-twitter text-blush-500 group-hover:scale-110 transition-transform"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17-18 11.6 2.2.1 4.4-.6 6-2 1.1 0 2.1-.3 2.9-.8 1.8 0 3.4-.8 4.4-2.2 1.2.7 2.1 1.1 3.1 1.1 1.4-.1 2.7-.8 3.8-1.6 0 0-.7 1.3-1.6 2.1 1.1.2 2.1.4 3.2.5-.8.8-1.7 1.4-2.6 1.9z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-twitter text-blush-500 group-hover:scale-110 transition-transform"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17-18 11.6 2.2.1 4.4-.6 6-2 1.1 0 2.1-.3 2.9-.8 1.8 0 3.4-.8 4.4-2.2 1.2.7 2.1 1.1 3.1 1.1 1.4-.1 2.7-.8 3.8-1.6 0 0-.7 1.3-1.6 2.1 1.1.2 2.1.4 3.2.5-.8.8-1.7 1.4-2.6 1.9z"/></svg>
               </a>
               <a 
                 href="#" 
@@ -115,7 +115,7 @@ const Footer = () => {
                 className="p-2 rounded-full bg-white hover:bg-blush-50 transition-colors shadow-sm border border-cream-200 group" 
                 aria-label="TikTok"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tiktok text-blush-500 group-hover:scale-110 transition-transform"><path d="M21 8V5c0-1.7-.3-3.2-1.4-4.3-.9-.9-2.1-1.4-3.5-1.7-1.4-.3-2.8-.2-4.2.2-.7.2-1.4.5-2.1.9-.7.4-1.3.9-1.8 1.5-.5.6-.9 1.2-1.2 1.9-.3.7-.5 1.4-.5 2.1v3.5c0 .7.2 1.4.5 2.1.3.7.7 1.3 1.2 1.8.5.5 1.1.9 1.8 1.2.7.3 1.4.5 2.1.5h3.5c.7 0 1.4-.2 2.1-.5.7-.3 1.3-.7 1.8-1.2.5-.5.9-1.1 1.2-1.8.3-.7.5-1.4.5-2.1z"/><path d="M12 21v-3.5c0-.7-.2-1.4-.5-2.1-.3-.7-.7-1.3-1.2-1.8-.5-.5-1.1-.9-1.8-1.2-.7-.3-1.4-.5-2.1-.5H4"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-tiktok text-blush-500 group-hover:scale-110 transition-transform"><path d="M21 8V5c0-1.7-.3-3.2-1.4-4.3-.9-.9-2.1-1.4-3.5-1.7-1.4-.3-2.8-.2-4.2.2-.7.2-1.4.5-2.1.9-.7.4-1.3.9-1.8 1.5-.5.6-.9 1.2-1.2 1.9-.3.7-.5 1.4-.5 2.1v3.5c0 .7.2 1.4.5 2.1.3.7.7 1.3 1.2 1.8.5.5 1.1.9 1.8 1.2.7.3 1.4.5 2.1.5h3.5c.7 0 1.4-.2 2.1-.5.7-.3 1.3-.7 1.8-1.2.5-.5.9-1.1 1.2-1.8.3-.7.5-1.4.5-2.1z"/><path d="M12 21v-3.5c0-.7-.2-1.4-.5-2.1-.3-.7-.7-1.3-1.2-1.8-.5-.5-1.1-.9-1.8-1.2-.7-.3-1.4-.5-2.1-.5H4"/></svg>
               </a>
             </div>
           </div>
