@@ -25,7 +25,7 @@ const Blog: React.FC = () => {
         const { data, count } = await fetchBlogPosts(currentPage, postsPerPage);
         setPosts(data || []);
         setTotalPages(Math.ceil((count || 0) / postsPerPage));
-      } catch (err) {
+    } catch (err) {
         setError('Failed to fetch posts.');
         console.error(err);
       } finally {
@@ -57,12 +57,11 @@ const Blog: React.FC = () => {
 
   if (loading) {
     return (
-    <>
-        <div className="container mx-auto px-4 py-8">
-          <h1 className="text-4xl font-bold text-center mb-8">Our Blog</h1>
-          <p className="text-center text-gray-600">Loading posts...</p>
-        </div>
-    );
+          <div className="container mx-auto px-4 py-8">
+            <h1 className="text-4xl font-bold text-center mb-8">Our Blog</h1>
+            <p className="text-center text-gray-600">Loading posts...</p>
+          </div>
+      );
   }
 
   if (error) {
@@ -154,7 +153,7 @@ const Blog: React.FC = () => {
           </div>
         )}
       </div>
-    </>
+
   );
 };
 

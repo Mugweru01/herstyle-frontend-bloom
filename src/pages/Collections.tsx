@@ -136,7 +136,7 @@ const Collections = () => {
             </h1>
             {currentCategory?.image_url && (
               <div className="mt-8 mb-12">
-                <img alt="Collection image" 
+                <img 
                   src={currentCategory.image_url}
                   alt={currentCategory.name}
                   className="w-full max-h-96 object-cover rounded-lg shadow-lg mx-auto"

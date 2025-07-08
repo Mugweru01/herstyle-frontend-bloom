@@ -81,7 +81,7 @@ const About = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="relative">
               <div className="absolute -inset-4 bg-gradient-to-r from-blush-100 to-dustyrose-100 rounded-3xl transform rotate-2 opacity-30"></div>
-              <img alt="About Us image"
+              <img
                 src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
                 alt="Fashion boutique interior"
                 className="relative rounded-2xl shadow-2xl w-full h-[500px] object-cover"

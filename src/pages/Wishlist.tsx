@@ -171,7 +171,7 @@ const Wishlist = () => {
                   isWishlisted={true}
                   animationDelay={`${index * 0.1}s`}
                 />
-              ))}
+
 
               ))}
             </div>
