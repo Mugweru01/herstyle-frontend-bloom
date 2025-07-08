@@ -1,11 +1,11 @@
 
 import React from 'react';
-import Layout from '@/components/Layout/Layout';
+
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 
 const ContactUs = () => {
   return (
-    <Layout>
+    <>
       <div className="min-h-screen bg-gradient-to-br from-cream-50 to-blush-50 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
@@ -95,7 +95,7 @@ const ContactUs = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useParams, Link } from 'react-router-dom';
-import Layout from '@/components/Layout/Layout';
+
 import { fetchBlogPostBySlug } from '../services/blogService';
 
 import { Database } from '@/types/supabase';
@@ -38,36 +38,30 @@ const BlogPostPage: React.FC = () => {
 
   if (loading) {
     return (
-      <Layout>
         <div className="container mx-auto px-4 py-8">
           <p className="text-center text-gray-600">Loading post...</p>
         </div>
-      </Layout>
     );
   }
 
   if (error) {
     return (
-      <Layout>
         <div className="container mx-auto px-4 py-8">
           <p className="text-center text-red-500">Error: {error}</p>
         </div>
-      </Layout>
     );
   }
 
   if (!post) {
     return (
-      <Layout>
         <div className="container mx-auto px-4 py-8">
           <p className="text-center">Blog post not found.</p>
         </div>
-      </Layout>
     );
   }
 
   return (
-    <Layout>
+    <>
       <div className="relative">
         <Link to="/blog" className="absolute top-4 left-4 text-gray-600 hover:text-gray-900 flex items-center z-10">
           ← Back to blog
@@ -118,7 +112,7 @@ blockquote: ({ node, ...props }) => (
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

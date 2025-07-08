@@ -1,12 +1,12 @@
 
 import React from 'react';
-import Layout from '../components/Layout/Layout';
+
 import { Mail, Phone, MapPin, Instagram, Share2 } from 'lucide-react';
 import ContactForm from '@/components/Contact/ContactForm';
 
 const Contact = () => {
   return (
-    <Layout>
+    <>
       <div className="py-20 px-8 md:px-16 bg-gradient-to-b from-white to-pink-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
@@ -56,7 +56,7 @@ const Contact = () => {
           </div>
         </div>
       </div>
-    </Layout>
+    </>
   );
 };
 

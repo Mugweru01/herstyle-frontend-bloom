@@ -4,7 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/hooks/useCart';
 import { useToast } from '@/hooks/use-toast';
 import { Heart, ShoppingBag, Trash2 } from 'lucide-react';
-import Layout from '@/components/Layout/Layout';
+import ProductCard from '@/components/Product/ProductCard';
+
 
 interface WishlistItem {
   id: string;
@@ -104,16 +105,10 @@ const Wishlist = () => {
     });
   };
 
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-KE', {
-      style: 'currency',
-      currency: 'KES',
-    }).format(price);
-  };
+
 
   if (loading) {
-    return (
-      <Layout>
+    return 
         <div className="min-h-screen bg-gradient-to-b from-blush-50 to-white py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -123,13 +118,10 @@ const Wishlist = () => {
               </div>
             </div>
           </div>
-        </div>
-      </Layout>
-    );
+        </div>;
   }
 
   return (
-    <Layout>
       <div className="min-h-screen bg-gradient-to-b from-blush-50 to-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -163,84 +155,29 @@ const Wishlist = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {wishlistItems.map((item, index) => (
-                <div
+                <ProductCard
                   key={item.id}
-                  className="group herstyle-card overflow-hidden animate-fade-in"
-                  style={{ animationDelay: `${index * 0.1}s` }}
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden">
-                    {item.products.images && item.products.images[0] ? (
-                      <img alt={item.name}
-                        src={item.products.images[0]}
-                        alt={item.products.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-blush-100 flex items-center justify-center">
-                        <Heart className="w-12 h-12 text-blush-400" />
-                      </div>
-                    )}
-                    
-                    {/* Sale badge */}
-                    {item.products.sale_price && item.products.sale_price < item.products.price && (
-                      <div className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-medium bg-dustyrose-500 text-white">
-                        Sale
-                      </div>
-                    )}
+                  product={{
+                    id: item.products.id,
+                    name: item.products.name,
+                    price: item.products.price,
+                    sale_price: item.products.sale_price,
+                    images: item.products.images,
+                    slug: item.products.id, // Using product id as slug for now, assuming it's unique
+                    description: item.products.description,
+                    stock: item.products.stock,
+                  }}
+                  onRemoveFromWishlist={() => removeFromWishlist(item.id)}
+                  isWishlisted={true}
+                  animationDelay={`${index * 0.1}s`}
+                />
+              ))}
 
-                    {/* Remove from wishlist */}
-                    <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <button 
-                        onClick={() => removeFromWishlist(item.id)}
-                        className="p-2 rounded-full bg-white/80 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
-                      >
-                        <Trash2 size={16} />
-                      </button>
-                    </div>
-
-                    {/* Quick add to bag */}
-                    <div className="absolute bottom-4 inset-x-4 opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                      <button 
-                        onClick={() => handleAddToCart(item.products.id, item.products.name)}
-                        className="w-full herstyle-button text-sm py-2 backdrop-blur-sm"
-                        disabled={item.products.stock === 0}
-                      >
-                        <ShoppingBag size={16} className="inline mr-2" />
-                        {item.products.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="font-playfair font-semibold text-lg text-gray-900 mb-2 line-clamp-2">
-                      {item.products.name}
-                    </h3>
-                    {item.products.description && (
-                      <p className="text-sm text-gray-600 mb-2 line-clamp-2">
-                        {item.products.description}
-                      </p>
-                    )}
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="text-xl font-medium text-gray-900">
-                        {formatPrice(item.products.sale_price || item.products.price)}
-                      </span>
-                      {item.products.sale_price && item.products.sale_price < item.products.price && (
-                        <span className="text-sm text-gray-500 line-through">
-                          {formatPrice(item.products.price)}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      {item.products.stock > 0 ? `${item.products.stock} in stock` : 'Out of stock'}
-                    </p>
-                  </div>
-                </div>
               ))}
             </div>
           )}
         </div>
       </div>
-    </Layout>
   );
 };
 

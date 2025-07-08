@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
 import { Card, CardContent } from '@/components/ui/card';
-import Layout from '@/components/Layout/Layout';
+
 import { fetchBlogPosts } from '../services/blogService';
 
 import { Database } from '@/types/supabase';
@@ -57,28 +57,24 @@ const Blog: React.FC = () => {
 
   if (loading) {
     return (
-      <Layout>
+    <>
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-4xl font-bold text-center mb-8">Our Blog</h1>
           <p className="text-center text-gray-600">Loading posts...</p>
         </div>
-      </Layout>
     );
   }
 
   if (error) {
     return (
-      <Layout>
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-4xl font-bold text-center mb-8">Our Blog</h1>
           <p className="text-center text-red-500">Error: {error}</p>
         </div>
-      </Layout>
     );
   }
 
   return (
-    <Layout>
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-12">
 <h1 className="text-5xl font-serif text-pink-600 underline decoration-green-500 decoration-2 underline-offset-4">Herstyle Journal</h1>
@@ -158,7 +154,7 @@ const Blog: React.FC = () => {
           </div>
         )}
       </div>
-    </Layout>
+    </>
   );
 };
 

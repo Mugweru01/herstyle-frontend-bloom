@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Layout from '../components/Layout/Layout';
+
 import { Heart, Award, Users, Sparkles, Star, ArrowRight } from 'lucide-react';
 
 const About = () => {
@@ -36,7 +36,7 @@ const About = () => {
   ];
 
   return (
-    <Layout>
+    <>
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-cream-50 via-blush-50 to-dustyrose-50 pt-24 pb-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-blush-100/30 to-dustyrose-100/30"></div>
@@ -199,7 +199,7 @@ const About = () => {
             </div>
             
             <h2 className="text-3xl lg:text-5xl font-playfair font-bold text-white mb-8 leading-tight">
-              Empowering Women Through Fashion
+```              Empowering Women Through Fashion
             </h2>
             
             <p className="text-xl lg:text-2xl text-white/95 mb-12 leading-relaxed">
@@ -228,7 +228,7 @@ const About = () => {
           </div>
         </div>
       </section>
-    </Layout>
+    </>
   );
 };
 

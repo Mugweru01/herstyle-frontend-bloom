@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Layout from '../components/Layout/Layout';
+
 import { Filter, Grid, List } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import ProductCard from '@/components/Product/ProductCard';
@@ -113,17 +113,17 @@ const Collections = () => {
 
   if (selectedProduct) {
     return (
-      <Layout>
+    <>
         <ProductDescription 
           product={selectedProduct} 
           onClose={() => setSelectedProduct(null)}
         />
-      </Layout>
+    </>
     );
   }
 
   return (
-    <Layout>
+    <>
       <div className="pt-20">
         {/* Header */}
         <div className="bg-gradient-to-b from-pink-50 to-white py-16 animate-fade-in-up">
@@ -237,8 +237,8 @@ const Collections = () => {
                     key={product.id}
                     product={product}
                     onQuickView={handleQuickView}
-                    className={`animate-fade-in ${viewMode === 'list' ? 'lg:flex lg:gap-6' : ''} shadow-sm hover:shadow-md transition-all duration-300`}
-                    style={{ animationDelay: `${index * 0.1}s` }}
+                    animationDelay={`${index * 0.1}s`}
+                    viewMode={viewMode}
                   />
                 ))}
               </div>
@@ -315,7 +315,7 @@ const Collections = () => {
             </div>
           </div>
         </div>
-    </Layout>
+    </>
   );
 };
 

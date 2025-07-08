@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Sparkles } from 'lucide-react';
-import Layout from '@/components/Layout/Layout';
+
 import ProductCard from '@/components/Product/ProductCard';
 import ProductDescription from '@/components/Product/ProductDescription';
 
@@ -77,8 +77,8 @@ const NewIn = () => {
 
   if (loading) {
     return (
-      <Layout>
-        <div className="min-h-screen bg-gradient-to-b from-cream-50 to-white py-20">
+    <>
+      <div className="min-h-screen bg-gradient-to-b from-cream-50 to-white py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <div className="animate-pulse">
@@ -97,24 +97,21 @@ const NewIn = () => {
             </div>
           </div>
         </div>
-      </Layout>
+      </>
     );
   }
 
   if (selectedProduct) {
     return (
-      <Layout>
         <ProductDescription 
           product={selectedProduct} 
           onClose={() => setSelectedProduct(null)}
         />
-      </Layout>
     );
   }
 
   return (
-    <Layout>
-      <div className="min-h-screen bg-gradient-to-b from-cream-50 to-white py-20">
+    <div className="min-h-screen bg-gradient-to-b from-cream-50 to-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="flex justify-center mb-6">
@@ -168,7 +165,6 @@ const NewIn = () => {
           )}
         </div>
       </div>
-    </Layout>
   );
 };
 

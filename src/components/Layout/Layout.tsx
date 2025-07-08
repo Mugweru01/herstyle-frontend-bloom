@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import { HERO_IMAGE_URL } from '../Home/NewHeroSection';
 
 import CookieConsent from '@/components/CookieConsent/CookieConsent';
+import Footer from './Footer';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -27,6 +28,7 @@ const Layout = ({ children }: LayoutProps) => {
 
 
       <CookieConsent />
+      <Footer />
     </div>
   );
 };
