@@ -62,8 +62,8 @@ const Navbar: React.FC = () => {
   const getNavbarClasses = () => {
     const baseClasses = `fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out py-4`;
 
-    const transparencyClass = isTransparent
-    const transparencyClasses = isTransparent ? 'bg-transparent' : 'bg-[#447D9B] shadow-xl';
+
+    const transparencyClasses = isTransparent ? 'bg-transparent' : 'bg-[#387478] shadow-xl';
     return `${baseClasses} ${transparencyClasses}`;
   };
 
