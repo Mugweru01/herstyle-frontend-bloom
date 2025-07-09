@@ -85,14 +85,16 @@ const Navbar: React.FC<NavbarProps> = ({ isTransparent }) => {
             <div className="md:hidden">
               <Menu className={`h-6 w-6 ${getTextColorClasses()} cursor-pointer`} onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
             </div>
-            <button onClick={() => setIsSearchModalOpen(true)}>
-              <Search className={`h-5 w-5 ${getTextColorClasses()} cursor-pointer`} />
-            </button>
-            {user ? (
-              <button onClick={handleLogout} className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>Logout</button>
-            ) : (
-              <button onClick={() => setIsAuthModalOpen(true)} className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>Login / Account</button>
-            )}
+            <div className="hidden md:flex items-center space-x-4">
+              <button onClick={() => setIsSearchModalOpen(true)}>
+                <Search className={`h-5 w-5 ${getTextColorClasses()} cursor-pointer`} />
+              </button>
+              {user ? (
+                <button onClick={handleLogout} className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>Logout</button>
+              ) : (
+                <button onClick={() => setIsAuthModalOpen(true)} className={`${getTextColorClasses()} hover:text-gray-300 transition-all duration-200`}>Login / Account</button>
+              )}
+            </div>
             {/* Add any additional right-aligned elements here if needed */}
           </div>
         </div>
@@ -112,6 +114,7 @@ const Navbar: React.FC<NavbarProps> = ({ isTransparent }) => {
           <li><Link to="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">About</Link></li>
           <li><Link to="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">Contact</Link></li>
           <li><Link to="/blog" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-gray-300 transition-all duration-200">Blog</Link></li>
+          <li><button onClick={() => { setIsSearchModalOpen(true); setIsMobileMenuOpen(false); }} className="hover:text-gray-300 transition-all duration-200">Search</button></li>
           {user ? (
             <li><button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} className="hover:text-gray-300 transition-all duration-200">Logout</button></li>
           ) : (
