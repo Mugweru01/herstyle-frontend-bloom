@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         {/* Brand Info */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-4">Herstyle</h3>
+          <img src="https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/logo/herstylelogo.png" alt="Herstyle Logo" className="h-8 w-auto" />
           <p className="text-gray-600 text-sm mb-4">
             Elegance, simplicity, and luxury for the modern woman.
           </p>

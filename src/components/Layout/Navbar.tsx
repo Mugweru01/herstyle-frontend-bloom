@@ -48,7 +48,7 @@ const Navbar: React.FC<NavbarProps> = ({ isTransparent }) => {
     setUser(null);
   };
 
-  const logoUrl = 'https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/logo/herstylelogo.png';
+  const logoUrl = "https://cbxzzudqfyilqhamztvo.supabase.co/storage/v1/object/public/logo//herstylelogo.png";
 
   const getNavbarClasses = () => {
     const baseClasses = `fixed top-0 left-0 w-full z-50 transition-all duration-300 ease-in-out py-4`;
