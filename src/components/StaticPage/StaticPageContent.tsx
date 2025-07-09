@@ -43,7 +43,10 @@ const StaticPageContent = () => {
         .eq('slug', slug)
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase fetch error:', error.message, error.details);
+        throw error;
+      }
       
       setPage(data);
 
@@ -66,7 +69,7 @@ const StaticPageContent = () => {
         }
       }
     } catch (error) {
-      console.error('Error fetching page:', error);
+      console.error('Error fetching page:', error); // This error is a generic JS error, not necessarily a Supabase error object
       setError('Failed to load page content');
       toast({
         title: 'Error',
